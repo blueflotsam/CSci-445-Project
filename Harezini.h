@@ -34,7 +34,7 @@
 #endif*/
 
 // RAYGL
-#define RAYGL 1
+#define RAYGL 0
 #if RAYGL == 1
 	#include "./raygl/raygl.h"
 	#include "./raygl/raygldefs.h"
