@@ -11,9 +11,9 @@ RAYGL     = ./raygl/raygl
 CFLAGS = -Wall -DGL_GLEXT_PROTOTYPES -fPIC
 LFLAGS = -static -c
 
-$(PROG): $(PROG).o
+$(PROG): $(PROG).o $(RAYGL).o
 	$(CC) $@$(EXT) $(CFLAGS) $(INCLUDE) $(INCLUDEGL) $(RAYGL).o $(LIBDIR) $(LIBS) -o $@
-raygl: 
+$(RAYGL).o: 
 	$(CC) $(RAYGL).cpp $(INCLUDE) $(INCLUDEGL) $(LFLAGS) -o $(RAYGL).o
 clean:
 	rm -f $(PROG).o
