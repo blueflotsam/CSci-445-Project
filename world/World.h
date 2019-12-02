@@ -8,6 +8,10 @@
 
 #include "../Harezini.h"
 
+#define ROAD_FILE "./world/road_texture.jpg"
+#define GRASS_FILE "./world/grass_texture.jpg"
+#define WORLD_TEXTURE_NUM 2
+
 class World
 {
 	private:
@@ -17,34 +21,44 @@ class World
 	float yOrig;
 	float zOrig;
 
-	static void drawRoad(){
+	// Textures:
+	// 0 = road
+	int numTextures; // gets set in constructor via WORLD_TEXTURE_NUM
+	GLuint texture[WORLD_TEXTURE_NUM];
+	static const int ROAD = 0;
+	static const int GRASS = 1;
+
+	static void drawRoad(float xSize, float zSize){
+		xSize /= 2;
+		zSize /= 2;
 		glBegin(GL_QUADS);
 			glMaterialfv(GL_FRONT, LIGHTING_TYPE, BLACK);
 			glNormal3f(0.0,1.0,0.0);
 			glTexCoord2f(0.0, 0.0);
-			glVertex3f(0.0, 0.0, 0.0);
+			glVertex3f(-xSize, 0.0, zSize);
 			glTexCoord2f(1.0, 0.0);
-			glVertex3f(1.0, 0.0, 0.0);
+			glVertex3f( xSize, 0.0, zSize);
 			glTexCoord2f(1.0, 1.0);
-			glVertex3f(1.0, 0.0,-1.0);
+			glVertex3f( xSize, 0.0,-zSize);
 			glTexCoord2f(0.0, 1.0);
-			glVertex3f(0.0, 0.0,-1.0);
+			glVertex3f(-xSize, 0.0,-zSize);
 		glEnd();
 	}
 	
-	static void drawGrass(float size){
-		size /= 2;
+	static void drawGrass(float xSize, float zSize){
+		xSize /= 2;
+		zSize /= 2;
 		glBegin(GL_QUADS);
 			glMaterialfv(GL_FRONT, LIGHTING_TYPE, GREEN);
 			glNormal3f(0.0,1.0,0.0);
 			glTexCoord2f(0.0, 0.0);
-			glVertex3f(-size, 0.0, size);
+			glVertex3f(-xSize, 0.0, zSize);
 			glTexCoord2f(1.0, 0.0);
-			glVertex3f( size, 0.0, size);
+			glVertex3f( xSize, 0.0, zSize);
 			glTexCoord2f(1.0, 1.0);
-			glVertex3f( size, 0.0,-size);
+			glVertex3f( xSize, 0.0,-zSize);
 			glTexCoord2f(0.0, 1.0);
-			glVertex3f(-size, 0.0,-size);
+			glVertex3f(-xSize, 0.0,-zSize);
 		glEnd();
 	}
 
@@ -59,17 +73,122 @@ class World
 		glEnd();
 	}
 
+	void loadTextures(){
+		int width, height, nrChannels, texture_index;
+		char *texture_file;
+		unsigned char *data;
+
+		// Allocate raygl texture space
+		#if RAYGL == 1
+		Image *image[numTextures];
+		for (int i = 0; i < numTextures; i++){
+			image[i] = (Image *) malloc(sizeof(Image));
+			if (image[i] == NULL) exit(0);
+		}
+		#endif
+
+		// Load road texture
+		texture_file = (char *)ROAD_FILE;
+		texture_index = ROAD;
+		#if RAYGL == 1
+		if (!imageLoad(texture_file, image[texture_index])) exit(0);
+		#else
+		data = stbi_load(texture_file, &width, &height, &nrChannels, 0);
+		if (!data){
+				printf("Unable to load \"%s\", exiting program\n", texture_file);
+				stbi_image_free(data);
+				exit(-1);
+		}
+		#endif
+		glGenTextures(numTextures, &texture[texture_index]);
+		glBindTexture(GL_TEXTURE_2D, texture[texture_index]);
+		// Set texture wrapping options for bound texture
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		#if RAYGL == 1
+		glTexImage2DGL_TEXTURE_2D, 0, GL_RGB8, image[texture_index]->sizeX, image[texture_index]->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image[texture_index]->data);
+		#else
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		//glGenerateMipmap(GL_TEXTURE_2D);
+		stbi_image_free(data);
+		#endif
+
+		// Load grass texture
+		texture_file = (char *)GRASS_FILE;
+		texture_index = GRASS;
+		#if RAYGL == 1
+		if (!imageLoad(texture_file, image[texture_index])) exit(0);
+		#else
+		data = stbi_load(texture_file, &width, &height, &nrChannels, 0);
+		if (!data){
+				printf("Unable to load \"%s\", exiting program\n", texture_file);
+				stbi_image_free(data);
+				exit(-1);
+		}
+		#endif
+		glGenTextures(numTextures, &texture[texture_index]);
+		glBindTexture(GL_TEXTURE_2D, texture[texture_index]);
+		// Set texture wrapping options for bound texture
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		#if RAYGL == 1
+		glTexImage2DGL_TEXTURE_2D, 0, GL_RGB8, image[texture_index]->sizeX, image[texture_index]->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image[texture_index]->data);
+		#else
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		//glGenerateMipmap(GL_TEXTURE_2D);
+		stbi_image_free(data);
+		#endif
+	}
+
 	public:
 
-	// Constructor
+	// Constructors
+	World(){
+		this->xOrig = 0;
+		this->yOrig = 0;
+		this->zOrig = 0;
+		this->numTextures = WORLD_TEXTURE_NUM;
+		loadTextures();
+	}
 	World(float xOrig, float yOrig, float zOrig){
 		this->xOrig = xOrig;
 		this->yOrig = yOrig;
 		this->zOrig = zOrig;
+		this->numTextures = WORLD_TEXTURE_NUM;
+		loadTextures();
 	}
 
 	void draw(){
+		// turn on textures
+		glEnable(GL_TEXTURE_2D);
+		// move to center location of object
 		glTranslatef(xOrig, yOrig, zOrig);
-		drawGrass(100.0);
+		// Road
+		glBindTexture(GL_TEXTURE_2D, texture[ROAD]);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+		#if RAYGL == 1
+			rayglScaleTexture(1, 1, 1);
+			rayglTranslateTexture(0, 0, 0);
+			rayglRotateTexture(0, 0, 0);
+			rayglTextureType(0);
+		#endif
+		drawRoad(10.0, 100.0);
+		// Grass
+		glBindTexture(GL_TEXTURE_2D, texture[GRASS]);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+		#if RAYGL == 1
+			rayglScaleTexture(1, 1, 1);
+			rayglTranslateTexture(0, 0, 0);
+			rayglRotateTexture(0, 0, 0);
+			rayglTextureType(0);
+		#endif
+		glTranslatef(-55.0, 0.0, 0.0);
+		drawGrass(100.0, 100.0);
+		glTranslatef( 110.0, 0.0, 0.0);
+		drawGrass(100.0, 100.0);
 	}
 };
