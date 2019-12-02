@@ -5,26 +5,15 @@
   /*                                                */
   /* CSci 446 / fall 2019                           */
   /**************************************************/
-
-#include <GL/gl.h>
-//#include <raygl.h>
-//#include <raygldefs.h>
-#include <GL/glu.h>
-#include <GL/glext.h>
-#include <GL/freeglut.h>
-#include <GL/glut.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <math.h>
-#include "libIO.h"
-#include <iostream>
-#include <fstream>
-
-#ifndef _pgmIO_
-#define _pgmIO_
-unsigned char *PGM_FILE_READ_1D(char *, int *, int *, int *);
+#ifndef STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
 #endif
+
+#include "Carrot.h"
+#include "stb_image.h"
+
+
+
 
 #define  RADDEG  57.29577951f
 float XUP[3] = {1,0,0}, XUN[3] = {-1, 0, 0},
@@ -34,20 +23,18 @@ float XUP[3] = {1,0,0}, XUN[3] = {-1, 0, 0},
 GLUquadricObj *sphere =gluNewQuadric();
 GLfloat viewangle = 0, tippangle = 0, traj[120][3];
 
-GLfloat d[3] = {0.1, 0.1, 0.1};
-GLfloat times=0;//what time in the animation the object is in, incriments by one for each movement
-GLfloat  xAngle = 0.0, yAngle = 0.0, zAngle = 0.0;
+float d[3] = {0.1, 0.1, 0.1};
+float times=0;//what time in the animation the object is in, incriments by one for each movement
+float  xAngle = 0.0, yAngle = 0.0, zAngle = 0.0;
 float ambientStrength=.1;
 GLuint ConeMap;
 void TEXTURE_MODEL(void){
-
    int w, h, c;
    //char arr[13]={'.','/','c','a','r','r','o','t','2','.','p','p','m'};
-   char *arr;
+   unsigned char *arr;
    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-   std::ifstream images;
-   images.open("./carrot2.ppm");
-   //unsigned char *data= PGM_FILE_READ_1D(arr, &w, &h, &c); 
+
+   unsigned char *data= stbi_load("carrot2.ppm", &w,&h,&c,0);
    glGenTextures(1, &ConeMap);
    glBindTexture(GL_TEXTURE_2D, ConeMap);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -55,8 +42,8 @@ void TEXTURE_MODEL(void){
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT); 
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); 
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, images.get());
-   //free(data);
+   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+   stbi_image_free(data);
 }
 
 void Special_Keys (int key, int x, int y)
