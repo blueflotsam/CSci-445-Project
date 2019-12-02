@@ -1,5 +1,9 @@
 /**************************************************/
 /* Name: David Andrew Wilson IV                   */
+/* Name: Megan Giesler                            */
+/* Name: Cory Haas                                */
+/*                                                */
+/* HW9                                            */
 /*                                                */
 /* Main source file for rendering scene           */
 /*                                                */
