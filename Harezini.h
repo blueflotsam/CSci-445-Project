@@ -9,12 +9,13 @@
 #define LIGHTING_TYPE GL_AMBIENT_AND_DIFFUSE
 
 // Libraries
+#include <GL/freeglut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <GL/freeglut.h>
+#include <math.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <string.h>
+#include <unistd.h>
 
 // Constant colors
 #ifndef COLOR
@@ -40,4 +41,12 @@
 	#include "./raygl/raygldefs.h"
 #endif
 
-
+// functions
+void initialize();
+void myDisplay();
+void reshape(GLsizei width, GLsizei height);
+void specialKeyPressed(int key, int xMouse, int yMouse);
+void moveCamForward();
+void moveCamBackward();
+void keyboardKeyPressed(unsigned char key, int xMouse, int yMouse);
+void idleFunction();

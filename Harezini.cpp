@@ -28,14 +28,46 @@ GLfloat xScale = 1.0f;
 GLfloat yScale = YSCALE_DEF;
 GLfloat zScale = 1.0f;
 
-// Rotation globals
-float xRotation = 0.0;
-float yRotation = 0.0;
+// Camera
+double DEGREES_TO_RADIAN = M_PI / 180;
+float xPos = 0.0;
+float yPos = 0.0;
+float zPos = 0.0;
+int xRot = 0.0;
+int yRot = 0.0;
 
 // Swap buffer global
 int swapBuffer = 1;
 
-void initialize(){
+int main(int argc, char **argv)
+{
+	// Window creation
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH);
+	glutInitWindowSize(640, 480);
+	glutInitWindowPosition(0, 0);
+	glutCreateWindow("Harezini");
+	// Callback functions
+	glutDisplayFunc(myDisplay);
+	glutReshapeFunc(reshape);
+	glutKeyboardFunc(keyboardKeyPressed);
+	glutSpecialFunc(specialKeyPressed);
+	glutIdleFunc(idleFunction);
+	// Start program
+	initialize();
+	/*
+		GROUP: Place class constructor here
+	*/
+	world = new World(0.0,-10.0,0.0);
+	rabbit = new Rabbit(0.0, 0.0, -10.0);
+
+	glutMainLoop();
+	delete rabbit;
+	return 0;
+}
+
+void initialize()
+{
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // BLACK, opacity max
 	glClearDepth(1.0f); // Background Depth maximum
 	glEnable(GL_DEPTH_TEST);
@@ -54,42 +86,50 @@ void initialize(){
 	glShadeModel(GL_SMOOTH);
 }
 
-void myDisplay(){
+void myDisplay()
+{
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	GLfloat matAmbient[]   = {0.19125, 0.0735,  0.025,    1.0};
 
-#if RAYGL == 1
+	#if RAYGL == 1
 	rayglFrameBegin((char*)"./frames/frame");
 	setFadeDistance(1000.0);
 	setFadePower(2.0);
-#endif
-
 	// Material for povray
 	glColor3fv(matAmbient);
+	#endif
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glPushMatrix();
-		glRotatef(yRotation, 1.0, 0.0, 0.0); // X axis rotation
-		glRotatef(xRotation, 0.0, 1.0, 0.0); // Y axis rotation
+		glRotatef(yRot, 1.0, 0.0, 0.0); // pitch
+		glRotatef(-xRot, 0.0, 1.0, 0.0); // Heading
+		glTranslatef(-xPos, -yPos, -zPos);
 		/*
 			GROUP: place class draw function here
 		*/
-		world->draw();
-		rabbit->draw();
+		// World
+		glPushMatrix();
+			world->draw();
+		glPopMatrix();
+		// Rabbit		
+		glPushMatrix();        
+			rabbit->draw();
+		glPopMatrix();
 	glPopMatrix();
 
-#if RAYGL == 1
+	#if RAYGL == 1
 	rayglFrameEnd();
-#endif
+	#endif
 
 	if (swapBuffer) {
 		glutSwapBuffers();
 	}
 }
 
-void reshape(GLsizei width, GLsizei height){
+void reshape(GLsizei width, GLsizei height)
+{
 	if (height == 0) height = 1;
 	GLfloat aspect = (GLfloat)width / (GLfloat)height;
 	glViewport(0, 0, width, height);
@@ -101,58 +141,51 @@ void reshape(GLsizei width, GLsizei height){
 	gluPerspective(45.0f, aspect, 1.0f, 100.0f);
 }
 
-void specialKeyPressed(int key, int xMouse, int yMouse){
+void specialKeyPressed(int key, int xMouse, int yMouse)
+{
 	if(key == GLUT_KEY_RIGHT){
-		xRotation += 1.0;
+		xRot = (xRot - 1) % 360;
 	} else if (key == GLUT_KEY_LEFT){
-		xRotation -= 1.0;
+		xRot = (xRot + 1) % 360;
 	} else if (key == GLUT_KEY_UP){
-		yRotation += 1.0;
+		yRot = (yRot - 1) % 360;
 	} else if (key == GLUT_KEY_DOWN){
-		yRotation -= 1.0;
+		yRot = (yRot + 1) % 360;
 	} else {
 		return;
 	}
 	glutPostRedisplay();
 }
 
-void keyboardKeyPressed(unsigned char key, int xMouse, int yMouse){
-	if (key == ' ')rabbit->cycleAnimation();
+void moveCamForward()
+{
+	xPos -= sin(xRot * DEGREES_TO_RADIAN); // 90 = 1, 270 = -1
+	yPos -= sin(yRot * DEGREES_TO_RADIAN); // 90 = 1, 270 = -1
+	zPos -= cos(xRot * DEGREES_TO_RADIAN); // 0 = 1, 180 = -1
+}
+
+void moveCamBackward()
+{
+	xPos += sin(xRot * DEGREES_TO_RADIAN); // 90 = 1, 270 = -1
+	yPos += sin(yRot * DEGREES_TO_RADIAN); // 90 = 1, 270 = -1
+	zPos += cos(xRot * DEGREES_TO_RADIAN); // 0 = 1, 180 = -1
+}
+
+void keyboardKeyPressed(unsigned char key, int xMouse, int yMouse)
+{
+	if (key == 'r')rabbit->cycleAnimation();
 	else if(key == 'q')rabbit->cycleFancy();
+	else if(key == 'w')moveCamForward();
+	else if(key == 's')moveCamBackward();
 	else return;
 	glutPostRedisplay();
 }
 
-void idleFunction(){
+void idleFunction()
+{
 	/*
 		GROUP: place class idle function here
 	*/
 	rabbit->idle();
 	glutPostRedisplay();
-}
-
-int main(int argc, char **argv){
-	// Window creation
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH);
-	glutInitWindowSize(640, 480);
-	glutInitWindowPosition(0, 0);
-	glutCreateWindow("Harezini");
-	// Callback functions
-	glutDisplayFunc(myDisplay);
-	glutReshapeFunc(reshape);
-	glutKeyboardFunc(keyboardKeyPressed);
-	glutSpecialFunc(specialKeyPressed);
-	glutIdleFunc(idleFunction);
-	// Start program
-	initialize();
-	/*
-		GROUP: Place class constructor here
-	*/
-	world = new World(0.0,0.0,0.0);
-	rabbit = new Rabbit(0.0, 0.0, -10.0);
-
-	glutMainLoop();
-	delete rabbit;
-	return 0;
 }
