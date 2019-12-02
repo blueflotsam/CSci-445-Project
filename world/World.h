@@ -8,23 +8,14 @@
 
 #include "../Harezini.h"
 
-class World{
-	public:
-	static void draw(){
-		glLoadIdentity();
-		// Draw sky
-		drawSky();
-		// Draw Floor 100 x 100
-		for(int x = 0; x < 100; x++){
-			glPushMatrix();
-			for(int y = 0; y < 100; y++){
-				drawGrass();
-				glTranslatef(0.0,1.0,0.0);
-			}
-			glPopMatrix();
-			glTranslatef(1.0, 0.0, 0.0);
-		}
-	}
+class World
+{
+    private:
+
+    // Position values
+    float xOrig;
+    float yOrig;
+    float zOrig;
 
 	static void drawRoad(){
 		glBegin(GL_QUADS);
@@ -65,5 +56,30 @@ class World{
 			glVertex3f( 1000.0, 1000.0,-1000.0);
 			glVertex3f(-1000.0, 1000.0,-1000.0);
 		glEnd();
+	}
+
+	public:
+
+    // Constructor
+    World(float xOrig, float yOrig, float zOrig){
+        this->xOrig = xOrig;
+        this->yOrig = yOrig;
+        this->zOrig = zOrig;
+    }
+
+	static void draw(){
+		glLoadIdentity();
+		// Draw sky
+		drawSky();
+		// Draw Floor 100 x 100
+		for(int x = 0; x < 100; x++){
+			glPushMatrix();
+			for(int y = 0; y < 100; y++){
+				drawGrass();
+				glTranslatef(0.0,1.0,0.0);
+			}
+			glPopMatrix();
+			glTranslatef(1.0, 0.0, 0.0);
+		}
 	}
 };

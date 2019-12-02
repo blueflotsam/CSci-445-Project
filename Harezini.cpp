@@ -149,7 +149,7 @@ int main(int argc, char **argv){
 	/*
 		GROUP: Place class constructor here
 	*/
-	world = new World();
+	world = new World(0.0,0.0,0.0);
 	rabbit = new Rabbit(0.0, 0.0, -10.0);
 
 	glutMainLoop();
