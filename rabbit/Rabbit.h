@@ -101,6 +101,7 @@ class Rabbit {
 	}
 
 	void draw(){
+		glDisable(GL_TEXTURE_2D);
 		// Global Matrix
 		glTranslatef(xOrig, yOrig, zOrig);
 		// Draw Head
