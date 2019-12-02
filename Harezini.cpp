@@ -8,9 +8,16 @@
 
 #include "Harezini.h"
 
-// Include rabbit
+/*
+	GROUP: include class header files here
+*/
+#include "./world/World.h"
 #include "./rabbit/Rabbit.h"
 
+/*
+	GROUP: define class variable here
+*/
+World *world;
 Rabbit *rabbit;
 
 #define LIGHTING_TYPE GL_AMBIENT_AND_DIFFUSE
@@ -62,10 +69,14 @@ void myDisplay(){
 	glColor3fv(matAmbient);
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity ();
+	glLoadIdentity();
 	glPushMatrix();
 		glRotatef(yRotation, 1.0, 0.0, 0.0); // X axis rotation
 		glRotatef(xRotation, 0.0, 1.0, 0.0); // Y axis rotation
+		/*
+			GROUP: place class draw function here
+		*/
+		world->draw();
 		rabbit->draw();
 	glPopMatrix();
 
@@ -113,6 +124,9 @@ void keyboardKeyPressed(unsigned char key, int xMouse, int yMouse){
 }
 
 void idleFunction(){
+	/*
+		GROUP: place class idle function here
+	*/
 	rabbit->idle();
 	glutPostRedisplay();
 }
@@ -132,7 +146,12 @@ int main(int argc, char **argv){
 	glutIdleFunc(idleFunction);
 	// Start program
 	initialize();
+	/*
+		GROUP: Place class constructor here
+	*/
+	world = new World();
 	rabbit = new Rabbit(0.0, 0.0, -10.0);
+
 	glutMainLoop();
 	delete rabbit;
 	return 0;
