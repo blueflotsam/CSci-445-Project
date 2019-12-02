@@ -20,7 +20,7 @@ ypos=y;
 zpos=z;
 }
 
-void animate(int stage){
+void animate(bool stage){
 animate=stage;
 }
 
