@@ -101,7 +101,6 @@ class Rabbit {
 	}
 
 	void draw(){
-		glLoadIdentity();
 		// Global Matrix
 		glTranslatef(xOrig, yOrig, zOrig);
 		// Draw Head
