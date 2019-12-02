@@ -1,11 +1,6 @@
 
 #include "../Harezini.h"
-/*
-#ifndef STB_IMAGE_IMPLEMENTATION
-#define STB_IMAGE_IMPLEMENTATION
-#endif
-#include "stb_image.h"
-*/
+
 class Carrot{
 
 float d[3] = {0.1, 0.1, 0.1};
@@ -25,6 +20,9 @@ ypos=y;
 zpos=z;
 }
 
+void animate(int stage){
+animate=stage;
+}
 
 void TEXTURE_MODEL(void){
    int w, h, c;
@@ -68,7 +66,6 @@ void drawTriangle(float x, float y, float z, float y1, float z1){
 void drawCarrot (void)
 {
 TEXTURE_MODEL();
-glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 glTranslatef(xpos,ypos,zpos);
 glTranslatef(.01*times,0,0);
 glTranslatef(-.8,0,0);
