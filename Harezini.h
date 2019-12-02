@@ -39,6 +39,9 @@
 #if RAYGL == 1
 	#include "./raygl/raygl.h"
 	#include "./raygl/raygldefs.h"
+#else
+	#define STB_IMAGE_IMPLEMENTATION
+	#include "stb_image.h"
 #endif
 
 // functions
