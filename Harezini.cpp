@@ -138,7 +138,7 @@ void reshape(GLsizei width, GLsizei height)
 
 	glLoadIdentity();
 
-	gluPerspective(45.0f, aspect, 1.0f, 100.0f);
+	gluPerspective(45.0f, aspect, 1.0f, 2000.0f);
 }
 
 void specialKeyPressed(int key, int xMouse, int yMouse)
