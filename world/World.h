@@ -10,12 +10,12 @@
 
 class World
 {
-    private:
+	private:
 
-    // Position values
-    float xOrig;
-    float yOrig;
-    float zOrig;
+	// Position values
+	float xOrig;
+	float yOrig;
+	float zOrig;
 
 	static void drawRoad(){
 		glBegin(GL_QUADS);
@@ -32,18 +32,19 @@ class World
 		glEnd();
 	}
 	
-	static void drawGrass(){
+	static void drawGrass(float size){
+		size /= 2;
 		glBegin(GL_QUADS);
 			glMaterialfv(GL_FRONT, LIGHTING_TYPE, GREEN);
 			glNormal3f(0.0,1.0,0.0);
 			glTexCoord2f(0.0, 0.0);
-			glVertex3f(0.0, 0.0, 0.0);
+			glVertex3f(-size, 0.0, size);
 			glTexCoord2f(1.0, 0.0);
-			glVertex3f(1.0, 0.0, 0.0);
+			glVertex3f( size, 0.0, size);
 			glTexCoord2f(1.0, 1.0);
-			glVertex3f(1.0, 0.0,-1.0);
+			glVertex3f( size, 0.0,-size);
 			glTexCoord2f(0.0, 1.0);
-			glVertex3f(0.0, 0.0,-1.0);
+			glVertex3f(-size, 0.0,-size);
 		glEnd();
 	}
 
@@ -60,26 +61,15 @@ class World
 
 	public:
 
-    // Constructor
-    World(float xOrig, float yOrig, float zOrig){
-        this->xOrig = xOrig;
-        this->yOrig = yOrig;
-        this->zOrig = zOrig;
-    }
+	// Constructor
+	World(float xOrig, float yOrig, float zOrig){
+		this->xOrig = xOrig;
+		this->yOrig = yOrig;
+		this->zOrig = zOrig;
+	}
 
-	static void draw(){
-		glLoadIdentity();
-		// Draw sky
-		drawSky();
-		// Draw Floor 100 x 100
-		for(int x = 0; x < 100; x++){
-			glPushMatrix();
-			for(int y = 0; y < 100; y++){
-				drawGrass();
-				glTranslatef(0.0,1.0,0.0);
-			}
-			glPopMatrix();
-			glTranslatef(1.0, 0.0, 0.0);
-		}
+	void draw(){
+		glTranslatef(xOrig, yOrig, zOrig);
+		drawGrass(100.0);
 	}
 };
