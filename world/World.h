@@ -23,6 +23,7 @@ class World
 
 	// Textures:
 	// 0 = road
+	// 1 = grass
 	int numTextures; // gets set in constructor via WORLD_TEXTURE_NUM
 	GLuint texture[WORLD_TEXTURE_NUM];
 	static const int ROAD = 0;
@@ -38,9 +39,9 @@ class World
 			glVertex3f(-xSize, 0.0, zSize);
 			glTexCoord2f(1.0, 0.0);
 			glVertex3f( xSize, 0.0, zSize);
-			glTexCoord2f(1.0, 1.0);
+			glTexCoord2f(1.0, zSize/xSize);
 			glVertex3f( xSize, 0.0,-zSize);
-			glTexCoord2f(0.0, 1.0);
+			glTexCoord2f(0.0, zSize/xSize);
 			glVertex3f(-xSize, 0.0,-zSize);
 		glEnd();
 	}
@@ -53,11 +54,11 @@ class World
 			glNormal3f(0.0,1.0,0.0);
 			glTexCoord2f(0.0, 0.0);
 			glVertex3f(-xSize, 0.0, zSize);
-			glTexCoord2f(1.0, 0.0);
+			glTexCoord2f(xSize, 0.0);
 			glVertex3f( xSize, 0.0, zSize);
-			glTexCoord2f(1.0, 1.0);
+			glTexCoord2f(xSize, zSize);
 			glVertex3f( xSize, 0.0,-zSize);
-			glTexCoord2f(0.0, 1.0);
+			glTexCoord2f(0.0, zSize);
 			glVertex3f(-xSize, 0.0,-zSize);
 		glEnd();
 	}
@@ -105,8 +106,8 @@ class World
 		// Set texture wrapping options for bound texture
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		#if RAYGL == 1
 		glTexImage2DGL_TEXTURE_2D, 0, GL_RGB8, image[texture_index]->sizeX, image[texture_index]->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image[texture_index]->data);
 		#else
@@ -133,8 +134,8 @@ class World
 		// Set texture wrapping options for bound texture
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		#if RAYGL == 1
 		glTexImage2DGL_TEXTURE_2D, 0, GL_RGB8, image[texture_index]->sizeX, image[texture_index]->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image[texture_index]->data);
 		#else
