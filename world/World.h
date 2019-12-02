@@ -177,7 +177,7 @@ class World
 			rayglRotateTexture(0, 0, 0);
 			rayglTextureType(0);
 		#endif
-		drawRoad(10.0, 100.0);
+		drawRoad(10.0, 1000.0);
 		// Grass
 		glBindTexture(GL_TEXTURE_2D, texture[GRASS]);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
@@ -187,9 +187,9 @@ class World
 			rayglRotateTexture(0, 0, 0);
 			rayglTextureType(0);
 		#endif
-		glTranslatef(-55.0, 0.0, 0.0);
-		drawGrass(100.0, 100.0);
-		glTranslatef( 110.0, 0.0, 0.0);
-		drawGrass(100.0, 100.0);
+		glTranslatef(-252.5, 0.0, 0.0);
+		drawGrass(495.0, 1000.0);
+		glTranslatef( 505.0, 0.0, 0.0);
+		drawGrass(495.0, 1000.0);
 	}
 };
