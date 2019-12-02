@@ -13,12 +13,16 @@
 */
 #include "./world/World.h"
 #include "./rabbit/Rabbit.h"
+#include "./carrot/Carrot.h"
+#include "./hat/TopHat.h"
 
 /*
 	GROUP: define class variable here
 */
 World *world;
 Rabbit *rabbit;
+Carrot *carrot;
+TopHat *tophat;
 
 #define LIGHTING_TYPE GL_AMBIENT_AND_DIFFUSE
 #define YSCALE_DEF 1.0
@@ -58,8 +62,10 @@ int main(int argc, char **argv)
 	/*
 		GROUP: Place class constructor here
 	*/
-	world = new World(0.0,-10.0,0.0);
+	world = new World(0.0, -3.5, 0.0);
 	rabbit = new Rabbit(0.0, 0.0, -10.0);
+	carrot = new Carrot();
+	tophat = new TopHat(100.0, 5.0, 0.0);
 
 	glutMainLoop();
 	delete rabbit;
@@ -68,7 +74,7 @@ int main(int argc, char **argv)
 
 void initialize()
 {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // BLACK, opacity max
+	glClearColor(0.25, 0.5, 1.0, 1.0); // Background color
 	glClearDepth(1.0f); // Background Depth maximum
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -116,6 +122,15 @@ void myDisplay()
 		// Rabbit		
 		glPushMatrix();        
 			rabbit->draw();
+		glPopMatrix();
+		// TopHat
+		glPushMatrix();
+			tophat->draw();
+		glPopMatrix();
+		// Carrot
+		glPushMatrix();
+			carrot->carrotPos(5,5,5);
+			carrot->drawCarrot();
 		glPopMatrix();
 	glPopMatrix();
 
@@ -187,5 +202,6 @@ void idleFunction()
 		GROUP: place class idle function here
 	*/
 	rabbit->idle();
+	tophat->idle();
 	glutPostRedisplay();
 }

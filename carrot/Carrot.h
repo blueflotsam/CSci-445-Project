@@ -20,9 +20,9 @@ ypos=y;
 zpos=z;
 }
 
-void animate(bool stage){
+/*void animate(bool stage){
 animate=stage;
-}
+}*/
 
 void TEXTURE_MODEL(void){
    int w, h, c;
