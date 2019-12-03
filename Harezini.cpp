@@ -11,18 +11,11 @@
 /**************************************************/
 
 #include "Harezini.h"
-
-/*
-	GROUP: include class header files here
-*/
 #include "./world/World.h"
 #include "./rabbit/Rabbit.h"
 #include "./carrot/Carrot.h"
 #include "./hat/TopHat.h"
 
-/*
-	GROUP: define class variable here
-*/
 World *world;
 Rabbit *rabbit;
 Carrot *carrot;
@@ -63,16 +56,18 @@ int main(int argc, char **argv)
 	glutIdleFunc(idleFunction);
 	// Start program
 	initialize();
-	/*
-		GROUP: Place class constructor here
-	*/
+	// initialize class objects
 	world = new World(0.0, -3.5, 0.0);
 	rabbit = new Rabbit(0.0, 0.0, -10.0);
-	carrot = new Carrot();
+	carrot = new Carrot(5.0,5.0,5.0);
 	tophat = new TopHat(100.0, 5.0, 0.0);
-
+	// Main loop
 	glutMainLoop();
-	delete rabbit;
+	// Cleanup
+	//delete world;
+	//delete rabbit;
+	//delete carrot;
+	//delete tophat; 
 	return 0;
 }
 
@@ -101,13 +96,13 @@ void myDisplay()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	GLfloat matAmbient[]   = {0.19125, 0.0735,  0.025,    1.0};
+	// Material for povray
+	glColor3fv(matAmbient);
 
 	#if RAYGL == 1
 	rayglFrameBegin((char*)"./frames/frame");
 	setFadeDistance(1000.0);
 	setFadePower(2.0);
-	// Material for povray
-	glColor3fv(matAmbient);
 	#endif
 
 	glMatrixMode(GL_MODELVIEW);
@@ -116,9 +111,6 @@ void myDisplay()
 		glRotatef(yRot, 1.0, 0.0, 0.0); // pitch
 		glRotatef(-xRot, 0.0, 1.0, 0.0); // Heading
 		glTranslatef(-xPos, -yPos, -zPos);
-		/*
-			GROUP: place class draw function here
-		*/
 		// World
 		glPushMatrix();
 			world->draw();
@@ -133,7 +125,6 @@ void myDisplay()
 		glPopMatrix();
 		// Carrot
 		glPushMatrix();
-			carrot->carrotPos(5,5,5);
 			carrot->drawCarrot();
 		glPopMatrix();
 	glPopMatrix();
@@ -202,10 +193,13 @@ void keyboardKeyPressed(unsigned char key, int xMouse, int yMouse)
 
 void idleFunction()
 {
+	static int frame = 1;
 	/*
 		GROUP: place class idle function here
 	*/
-	rabbit->idle();
-	tophat->idle();
+	rabbit->idle(frame);
+	tophat->idle(frame);
+	carrot->idle(frame);
 	glutPostRedisplay();
+	frame++;
 }

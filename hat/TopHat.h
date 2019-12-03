@@ -268,7 +268,7 @@ class TopHat
 	    glDisable(GL_TEXTURE_2D);
 	}
 
-    void idle(void)
+    void idle(int frame)
     {
 	    if(0 > -1) // 
 	    {

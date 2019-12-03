@@ -8,7 +8,8 @@
 
 #include "../Harezini.h"
 
-class Rabbit {
+class Rabbit
+{
 	private:
 
 	// Animation Defaults
@@ -83,7 +84,7 @@ class Rabbit {
 		squish = SQUISH_DEF;
 	}
 
-	void idle(){
+	void idle(int frame){
 		if(animation == RIGHT_POINT){
 			rightPoint += 1.0;
 			if(rightPoint > 70)rightPoint = RIGHT_POINT_DEF;
