@@ -8,6 +8,11 @@
 
 #include "../Harezini.h"
 
+#define RABBIT_TEXTURE "./rabbit/rabbit_texture.jpg"
+#define RABBIT_FACE "./rabbit/rabbit_face.jpg"
+#define RABBIT_EAR "./rabbit/rabbit_ear.jpg"
+#define RABBIT_TEXTURE_NUM 2
+
 class Rabbit
 {
 	private:
@@ -39,6 +44,57 @@ class Rabbit
 	float yOrig;
 	float zOrig;
 
+	// Textures
+	int numTextures; // set in constructor (RABBIT_TEXTURE_NUM)
+	GLuint texture[RABBIT_TEXTURE_NUM];
+	static const int FACE = 0;
+
+	/*
+			Loads the textures to be used later
+	*/
+	void loadTextures(){
+		int width, height, nrChannels, texture_index;
+		char *texture_file;
+		unsigned char *data;
+
+		// Allocate raygl texture space
+		#if RAYGL == 1
+		Image *image[numTextures];
+		for (int i = 0; i < numTextures; i++){
+			image[i] = (Image *) malloc(sizeof(Image));
+			if (image[i] == NULL) exit(0);
+		}
+		#endif
+
+		// Load Rabbit face texture
+		texture_file = (char *)RABBIT_FACE;
+		texture_index = FACE;
+		#if RAYGL == 1
+		if (!imageLoad(texture_file, image[texture_index])) exit(0);
+		#else
+		data = stbi_load(texture_file, &width, &height, &nrChannels, 0);
+		if (!data){
+				printf("Unable to load \"%s\", exiting program\n", texture_file);
+				stbi_image_free(data);
+				exit(-1);
+		}
+		#endif
+		glGenTextures(numTextures, &texture[texture_index]);
+		glBindTexture(GL_TEXTURE_2D, texture[texture_index]);
+		// Set texture wrapping options for bound texture
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		#if RAYGL == 1
+		glTexImage2DGL_TEXTURE_2D, 0, GL_RGB8, image[texture_index]->sizeX, image[texture_index]->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image[texture_index]->data);
+		#else
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		//glGenerateMipmap(GL_TEXTURE_2D);
+		stbi_image_free(data);
+		#endif
+	}
+
 	public:
 
 	// Animation Definitions
@@ -53,6 +109,7 @@ class Rabbit
 		this->xOrig = xOrig;
 		this->yOrig = yOrig;
 		this->zOrig = zOrig;
+		numTextures = RABBIT_TEXTURE_NUM;
 		animation = 0;
 		fancy = 1;
 		rightPoint = RIGHT_POINT_DEF;
@@ -63,6 +120,7 @@ class Rabbit
 		leftSwing = LEFT_SWING_DEF;
 		rightFlex = RIGHT_FLEX_DEF;
 		leftFlex = LEFT_FLEX_DEF;
+		loadTextures();
 	}
 
 	void cycleFancy(){
@@ -295,9 +353,33 @@ class Rabbit
 	}
 
 	void drawHead(){
+		// Color
+		glMaterialfv(GL_FRONT, LIGHTING_TYPE, WHITE);
+		// Textured Part
+		glBindTexture(GL_TEXTURE_2D, texture[FACE]);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+		#if RAYGL == 1
+			rayglScaleTexture(1, 1, 1);
+			rayglTranslateTexture(0, 0, 0);
+			rayglRotateTexture(0, 0, 0);
+			rayglTextureType(0);
+		#endif
+		glEnable(GL_TEXTURE_2D);
 		glBegin(GL_QUADS);
-			// Color
-			glMaterialfv(GL_FRONT, LIGHTING_TYPE, WHITE);
+			// Head Front
+			glNormal3f( 0.0, 0.0, 1.0);
+			glTexCoord2f(1.0, 1.0);
+			glVertex3f( 0.8, 0.0, 0.5); // FR
+			glTexCoord2f(1.0, 0.5);
+			glVertex3f( 0.8, 0.6, 0.5); // BR
+			glTexCoord2f(0.0, 0.5);
+			glVertex3f(-0.8, 0.6, 0.5); // BL
+			glTexCoord2f(0.0, 1.0);
+			glVertex3f(-0.8, 0.0, 0.5); // FL
+		glEnd();
+		glDisable(GL_TEXTURE_2D);
+		// Non-textured
+		glBegin(GL_QUADS);
 			// Head Back
 		      glNormal3f( 0.0,0.0,-1.0);
 			glVertex3f( 0.8, 0.0,-1.0); // BR
@@ -316,12 +398,6 @@ class Rabbit
 			glVertex3f( 0.8, 1.4,-0.4); // BR
 			glVertex3f(-0.8, 1.4,-0.4); // BL
 			glVertex3f(-0.8, 0.6, 0.5); // FL
-			// Head Front
-		      glNormal3f( 0.0,0.0, 1.0);
-			glVertex3f( 0.8, 0.0, 0.5); // FR
-			glVertex3f( 0.8, 0.6, 0.5); // BR
-			glVertex3f(-0.8, 0.6, 0.5); // BL
-			glVertex3f(-0.8, 0.0, 0.5); // FL
 			// Head Side Left Back
 		      glNormal3f(-1.0,0.0,0.0);
 			glVertex3f(-0.8, 1.4,-0.4); // TR
@@ -352,19 +428,6 @@ class Rabbit
 			glVertex3f(-0.8, 0.0, 0.5); // FL
 			glVertex3f(-0.8, 0.0,-1.0); // BL
 			glVertex3f( 0.8, 0.0,-1.0); // BR
-		glEnd();
-		// Nose
-		glBegin(GL_LINES);
-			glMaterialfv(GL_FRONT, LIGHTING_TYPE, RED);
-			// Vertical
-			glVertex3f( 0.0, 0.0, 0.51);
-			glVertex3f( 0.0, 0.2, 0.51);
-			// Right
-			glVertex3f( 0.0, 0.2, 0.51);
-			glVertex3f(-0.3, 0.4, 0.51);
-			// Left
-			glVertex3f( 0.0, 0.2, 0.51);
-			glVertex3f( 0.3, 0.4, 0.51);
 		glEnd();
 	}
 };
