@@ -84,8 +84,8 @@ class Rabbit
 		// Set texture wrapping options for bound texture
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		#if RAYGL == 1
 		glTexImage2DGL_TEXTURE_2D, 0, GL_RGB8, image[texture_index]->sizeX, image[texture_index]->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image[texture_index]->data);
 		#else
@@ -160,6 +160,14 @@ class Rabbit
 	}
 
 	void draw(){
+		glBindTexture(GL_TEXTURE_2D, texture[FACE]);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+		#if RAYGL == 1
+			rayglScaleTexture(1, 1, 1);
+			rayglTranslateTexture(0, 0, 0);
+			rayglRotateTexture(0, 0, 0);
+			rayglTextureType(0);
+		#endif
 		glDisable(GL_TEXTURE_2D);
 		// Global Matrix
 		glTranslatef(xOrig, yOrig, zOrig);
@@ -187,12 +195,16 @@ class Rabbit
 					glRotatef(180.0-(side*20), 0.0, 0.0, 1.0);
 					glScalef(0.6, 0.7, 0.2);
 					drawBoxDown(WHITE);
-					glMaterialfv(GL_FRONT, LIGHTING_TYPE, RED);
+					glEnable(GL_TEXTURE_2D);
 					glBegin(GL_QUADS);
                         glNormal3f( 0.0,0.0,-1.0);
+						glTexCoord2f(0.5, 0.0);
 						glVertex3f(-0.2, 0.0, 0.51);
+						glTexCoord2f(0.5, 0.5);
 						glVertex3f(-0.2,-1.0, 0.51);
+						glTexCoord2f(0.0, 0.5); 
 						glVertex3f( 0.2,-1.0, 0.51);
+						glTexCoord2f(0.0, 0.0);
 						glVertex3f( 0.2, 0.0, 0.51);
 					glEnd();
 					glTranslatef(0.0,-1.0, 0.0);
@@ -200,11 +212,16 @@ class Rabbit
 					glMaterialfv(GL_FRONT, LIGHTING_TYPE, RED);
 					glBegin(GL_QUADS);
                         glNormal3f( 0.0,0.0,-1.0);
+						glTexCoord2f(1.0, 0.0);
 						glVertex3f(-0.2, 0.0, 0.51);
+						glTexCoord2f(1.0, 0.5);
 						glVertex3f(-0.2,-0.8, 0.51);
+						glTexCoord2f(0.5, 0.5); 
 						glVertex3f( 0.2,-0.8, 0.51);
+						glTexCoord2f(0.5, 0.0);
 						glVertex3f( 0.2, 0.0, 0.51);
 					glEnd();
+					glDisable(GL_TEXTURE_2D);
 				glPopMatrix();
 			}
 		glPopMatrix();
@@ -356,14 +373,6 @@ class Rabbit
 		// Color
 		glMaterialfv(GL_FRONT, LIGHTING_TYPE, WHITE);
 		// Textured Part
-		glBindTexture(GL_TEXTURE_2D, texture[FACE]);
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-		#if RAYGL == 1
-			rayglScaleTexture(1, 1, 1);
-			rayglTranslateTexture(0, 0, 0);
-			rayglRotateTexture(0, 0, 0);
-			rayglTextureType(0);
-		#endif
 		glEnable(GL_TEXTURE_2D);
 		glBegin(GL_QUADS);
 			// Head Front
