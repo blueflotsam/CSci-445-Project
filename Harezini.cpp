@@ -73,7 +73,7 @@ int main(int argc, char **argv)
 
 void initialize()
 {
-	glClearColor(0.25, 0.5, 1.0, 1.0); // Background color
+	glClearColor(0.1, 0.3, 0.87, 1.0); // Background color
 	glClearDepth(1.0f); // Background Depth maximum
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);

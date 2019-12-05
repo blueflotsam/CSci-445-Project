@@ -8,9 +8,10 @@
 
 #include "../Harezini.h"
 
-#define ROAD_FILE "./world/road_texture.jpg"
-#define GRASS_FILE "./world/grass_texture.jpg"
-#define WORLD_TEXTURE_NUM 2
+#define ROAD_FILE 	"./world/road_texture.jpg"
+#define GRASS_FILE 	"./world/grass_texture.jpg"
+#define SKY_FILE		"./world/sky_texture.jpg"
+#define WORLD_TEXTURE_NUM 3
 
 class World
 {
@@ -22,57 +23,11 @@ class World
 	float zOrig;
 
 	// Textures:
-	// 0 = road
-	// 1 = grass
-	int numTextures; // gets set in constructor via WORLD_TEXTURE_NUM
+	int numTextures; // set in constructor via WORLD_TEXTURE_NUM
 	GLuint texture[WORLD_TEXTURE_NUM];
 	static const int ROAD = 0;
 	static const int GRASS = 1;
-
-	static void drawRoad(float xSize, float zSize){
-		xSize /= 2;
-		zSize /= 2;
-		glBegin(GL_QUADS);
-			glMaterialfv(GL_FRONT, LIGHTING_TYPE, BLACK);
-			glNormal3f(0.0,1.0,0.0);
-			glTexCoord2f(0.0, 0.0);
-			glVertex3f(-xSize, 0.0, zSize);
-			glTexCoord2f(1.0, 0.0);
-			glVertex3f( xSize, 0.0, zSize);
-			glTexCoord2f(1.0, zSize/xSize);
-			glVertex3f( xSize, 0.0,-zSize);
-			glTexCoord2f(0.0, zSize/xSize);
-			glVertex3f(-xSize, 0.0,-zSize);
-		glEnd();
-	}
-	
-	static void drawGrass(float xSize, float zSize){
-		xSize /= 2;
-		zSize /= 2;
-		glBegin(GL_QUADS);
-			glMaterialfv(GL_FRONT, LIGHTING_TYPE, GREEN);
-			glNormal3f(0.0,1.0,0.0);
-			glTexCoord2f(0.0, 0.0);
-			glVertex3f(-xSize, 0.0, zSize);
-			glTexCoord2f(xSize, 0.0);
-			glVertex3f( xSize, 0.0, zSize);
-			glTexCoord2f(xSize, zSize);
-			glVertex3f( xSize, 0.0,-zSize);
-			glTexCoord2f(0.0, zSize);
-			glVertex3f(-xSize, 0.0,-zSize);
-		glEnd();
-	}
-
-	static void drawSky(){
-		glBegin(GL_QUADS);
-			glMaterialfv(GL_FRONT, LIGHTING_TYPE, BLUE);
-			glNormal3f(0.0,0.0,1.0);
-			glVertex3f(-1000.0,-1000.0,-1000.0);
-			glVertex3f( 1000.0,-1000.0,-1000.0);
-			glVertex3f( 1000.0, 1000.0,-1000.0);
-			glVertex3f(-1000.0, 1000.0,-1000.0);
-		glEnd();
-	}
+	static const int SKY = 2;
 
 	void loadTextures(){
 		int width, height, nrChannels, texture_index;
@@ -143,6 +98,116 @@ class World
 		//glGenerateMipmap(GL_TEXTURE_2D);
 		stbi_image_free(data);
 		#endif
+
+		// Load sky texture
+		texture_file = (char *)SKY_FILE;
+		texture_index = SKY;
+		#if RAYGL == 1
+		if (!imageLoad(texture_file, image[texture_index])) exit(0);
+		#else
+		data = stbi_load(texture_file, &width, &height, &nrChannels, 0);
+		if (!data){
+				printf("Unable to load \"%s\", exiting program\n", texture_file);
+				stbi_image_free(data);
+				exit(-1);
+		}
+		#endif
+		glGenTextures(numTextures, &texture[texture_index]);
+		glBindTexture(GL_TEXTURE_2D, texture[texture_index]);
+		// Set texture wrapping options for bound texture
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		#if RAYGL == 1
+		glTexImage2DGL_TEXTURE_2D, 0, GL_RGB8, image[texture_index]->sizeX, image[texture_index]->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image[texture_index]->data);
+		#else
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		//glGenerateMipmap(GL_TEXTURE_2D);
+		stbi_image_free(data);
+		#endif
+	}
+
+	static void drawRoad(float xSize, float zSize){
+		xSize /= 2;
+		zSize /= 2;
+		glBegin(GL_QUADS);
+			glMaterialfv(GL_FRONT, LIGHTING_TYPE, BLACK);
+			glNormal3f(0.0,1.0,0.0);
+			glTexCoord2f(0.0, 0.0);
+			glVertex3f(-xSize, 0.0, zSize);
+			glTexCoord2f(1.0, 0.0);
+			glVertex3f( xSize, 0.0, zSize);
+			glTexCoord2f(1.0, zSize/xSize);
+			glVertex3f( xSize, 0.0,-zSize);
+			glTexCoord2f(0.0, zSize/xSize);
+			glVertex3f(-xSize, 0.0,-zSize);
+		glEnd();
+	}
+	
+	static void drawGrass(float xSize, float zSize){
+		xSize /= 2;
+		zSize /= 2;
+		glBegin(GL_QUADS);
+			glMaterialfv(GL_FRONT, LIGHTING_TYPE, GREEN);
+			glNormal3f(0.0,1.0,0.0);
+			glTexCoord2f(0.0, 0.0);
+			glVertex3f(-xSize, 0.0, zSize);
+			glTexCoord2f(xSize, 0.0);
+			glVertex3f( xSize, 0.0, zSize);
+			glTexCoord2f(xSize, zSize);
+			glVertex3f( xSize, 0.0,-zSize);
+			glTexCoord2f(0.0, zSize);
+			glVertex3f(-xSize, 0.0,-zSize);
+		glEnd();
+	}
+
+	static void drawSky(float xSize, float zSize){
+		xSize /= 2;
+		zSize /= 2;
+		glBegin(GL_QUADS);
+			glMaterialfv(GL_FRONT, LIGHTING_TYPE, BLUE);
+			// Back
+			glNormal3f( 0.0, 0.0, 1.0);
+			glTexCoord2f(0.0, 1.0);
+			glVertex3f(-xSize,   0.0,-zSize);
+			glTexCoord2f(1.0, 1.0);
+			glVertex3f( xSize,   0.0,-zSize);
+			glTexCoord2f(1.0, 0.0);
+			glVertex3f( xSize, xSize + zSize,-zSize);
+			glTexCoord2f(0.0, 0.0);
+			glVertex3f(-xSize, xSize + zSize,-zSize);
+			// Front
+			glNormal3f( 0.0, 0.0,-1.0);
+			glTexCoord2f(1.0, 1.0);
+			glVertex3f(-xSize,   0.0, zSize);
+			glTexCoord2f(1.0, 0.0);
+			glVertex3f(-xSize, xSize + zSize, zSize);
+			glTexCoord2f(0.0, 0.0);
+			glVertex3f( xSize, xSize + zSize, zSize);
+			glTexCoord2f(0.0, 1.0);
+			glVertex3f( xSize,   0.0, zSize);
+			// Right
+			glNormal3f( 1.0, 0.0, 0.0);
+			glTexCoord2f(0.0, 1.0);
+			glVertex3f( xSize,   0.0,-zSize);
+			glTexCoord2f(1.0, 1.0);
+			glVertex3f( xSize,   0.0, zSize);
+			glTexCoord2f(1.0, 0.0);
+			glVertex3f( xSize, xSize + zSize, zSize);
+			glTexCoord2f(0.0, 0.0);
+			glVertex3f( xSize, xSize + zSize,-zSize);
+			// Left
+			glNormal3f(-1.0, 0.0, 0.0);
+			glTexCoord2f(1.0, 1.0);
+			glVertex3f(-xSize,   0.0,-zSize);
+			glTexCoord2f(1.0, 0.0);
+			glVertex3f(-xSize, xSize + zSize,-zSize);
+			glTexCoord2f(0.0, 0.0);
+			glVertex3f(-xSize, xSize + zSize, zSize);
+			glTexCoord2f(0.0, 1.0);
+			glVertex3f(-xSize,   0.0, zSize);
+		glEnd();
 	}
 
 	public:
@@ -168,6 +233,16 @@ class World
 		glEnable(GL_TEXTURE_2D);
 		// move to center location of object
 		glTranslatef(xOrig, yOrig, zOrig);
+		// Sky
+		glBindTexture(GL_TEXTURE_2D, texture[SKY]);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+		#if RAYGL == 1
+			rayglScaleTexture(1, 1, 1);
+			rayglTranslateTexture(0, 0, 0);
+			rayglRotateTexture(0, 0, 0);
+			rayglTextureType(0);
+		#endif
+		drawSky(1000.0, 1000.0);
 		// Road
 		glBindTexture(GL_TEXTURE_2D, texture[ROAD]);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
