@@ -43,6 +43,7 @@ class Rabbit
 	float xOrig;
 	float yOrig;
 	float zOrig;
+	float rotation;
 
 	// Textures
 	int numTextures; // set in constructor (RABBIT_TEXTURE_NUM)
@@ -226,13 +227,14 @@ class Rabbit
 	static const int TOTAL_ANIMATIONS = 4;
 
 	// Constructor
-	Rabbit(float xOrig, float yOrig, float zOrig){
+	Rabbit(float xOrig, float yOrig, float zOrig, float rotation){
 		this->xOrig = xOrig;
 		this->yOrig = yOrig;
 		this->zOrig = zOrig;
+		this->rotation = rotation;
 		numTextures = RABBIT_TEXTURE_NUM;
 		animation = 0;
-		fancy = 1;
+		fancy = 0;
 		rightPoint = RIGHT_POINT_DEF;
 		leftPoint = LEFT_POINT_DEF;
 		legBend = LEG_BEND_DEF;
@@ -264,7 +266,16 @@ class Rabbit
 	}
 
 	void idle(int frame){
-		if(animation == RIGHT_POINT){
+		if (frame == 1){
+			setAnimation(JUMPING);
+			zOrig -= 0.1;
+		} else if (frame < 300){
+			zOrig -= 0.1;
+		} else if (frame == 300){
+			setAnimation(IDLE);
+		}
+
+		if (animation == RIGHT_POINT){
 			rightPoint += 1.0;
 			if(rightPoint > 70)rightPoint = RIGHT_POINT_DEF;
 		} else if (animation == LEFT_POINT){
@@ -293,6 +304,7 @@ class Rabbit
 		glDisable(GL_TEXTURE_2D);
 		// Global Matrix
 		glTranslatef(xOrig, yOrig, zOrig);
+		glRotatef(rotation, 0.0, 1.0, 0.0);
 		// Draw Head
 		glPushMatrix();
 			glTranslatef(0.0,1.0,0.2);

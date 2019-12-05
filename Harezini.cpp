@@ -57,8 +57,8 @@ int main(int argc, char **argv)
 	// Start program
 	initialize();
 	// initialize class objects
-	world = new World(0.0, -3.5, 0.0);
-	rabbit = new Rabbit(0.0, 0.0, -10.0);
+	world = new World(0.0, -5.5, 0.0);
+	rabbit = new Rabbit(3.0, -2.0, -15.0, 180);
 	carrot = new Carrot(5.0,5.0,5.0);
 	tophat = new TopHat(100.0, 5.0, 0.0);
 	// Main loop
@@ -167,11 +167,11 @@ void specialKeyPressed(int key, int xMouse, int yMouse)
 	glutPostRedisplay();
 }
 
-void moveCamForward()
+void moveCamForward(float distance)
 {
-	xPos -= sin(xRot * DEGREES_TO_RADIAN); // 90 = 1, 270 = -1
-	yPos -= sin(yRot * DEGREES_TO_RADIAN); // 90 = 1, 270 = -1
-	zPos -= cos(xRot * DEGREES_TO_RADIAN); // 0 = 1, 180 = -1
+	xPos -= distance * sin(xRot * DEGREES_TO_RADIAN); // 90 = 1, 270 = -1
+	yPos -= distance * sin(yRot * DEGREES_TO_RADIAN); // 90 = 1, 270 = -1
+	zPos -= distance * cos(xRot * DEGREES_TO_RADIAN); // 0 = 1, 180 = -1
 }
 
 void moveCamBackward()
@@ -185,7 +185,7 @@ void keyboardKeyPressed(unsigned char key, int xMouse, int yMouse)
 {
 	if (key == 'r')rabbit->cycleAnimation();
 	else if(key == 'q')rabbit->cycleFancy();
-	else if(key == 'w')moveCamForward();
+	else if(key == 'w')moveCamForward(1.0);
 	else if(key == 's')moveCamBackward();
 	else return;
 	glutPostRedisplay();
@@ -200,6 +200,9 @@ void idleFunction()
 	rabbit->idle(frame);
 	tophat->idle(frame);
 	carrot->idle(frame);
+	if (frame < 300){
+		moveCamForward(0.1);
+	}
 	glutPostRedisplay();
 	frame++;
 }
