@@ -209,6 +209,40 @@ class World
 			glVertex3f(-xSize,   0.0, zSize);
 		glEnd();
 	}
+    
+
+    /*
+            ***
+           *****
+           *****
+            ***
+             *
+             *
+             *
+             @
+             
+        @ = (xpos, ypos, zpos) coordinate in relation to the tree
+    */
+    static void drawTree(float xpos, float ypos, float zpos){
+        glTranslatef(xpos, ypos, zpos);
+        GLUquadricObj *leaves;
+        GLUquadricObj *trunk;
+        leaves=gluNewQuadric();
+        trunk=gluNewQuadric();
+        float leavesRadius=5;
+        float leavesSharpness=9;
+        float trunkRadius=1;
+        float trunkHeight=10;
+        float trunkSharpness=14;
+        glMaterialfv(GL_FRONT, LIGHTING_TYPE, BLACK);
+        glRotatef(90,-90,0,0);
+        gluCylinder(trunk,trunkRadius,trunkRadius,trunkHeight,trunkSharpness,trunkSharpness);
+        glMaterialfv(GL_FRONT, LIGHTING_TYPE, GREEN);
+        glTranslatef(0,0,trunkHeight);
+        gluSphere(leaves,leavesRadius,leavesSharpness,leavesSharpness);
+        
+        
+    }
 
 	public:
 
@@ -266,5 +300,8 @@ class World
 		drawGrass(495.0, 1000.0);
 		glTranslatef( 505.0, 0.0, 0.0);
 		drawGrass(495.0, 1000.0);
+        
+        drawTree(-10,0,0);
+
 	}
 };
