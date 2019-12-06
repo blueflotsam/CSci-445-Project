@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 	// initialize class objects
 	world = new World(0.0, -5.5, 0.0);
 	rabbit = new Rabbit(3.0, -2.0, -15.0, 180);
-	carrot = new Carrot(5.0,5.0,5.0);
+	carrot = new Carrot(-5.0,-9.0,-93.0);
 	tophat = new TopHat(100.0, 5.0, 0.0);
 	// Main loop
 	glutMainLoop();
