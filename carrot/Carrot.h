@@ -102,10 +102,11 @@ animate=stage;
 		gluQuadricTexture(sphere, GL_TRUE);
 		glBindTexture(GL_TEXTURE_2D, ConeMap);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-
-		glColor3f(.3215,.4196,.1765);//green
-		GLfloat green[] = { .3215,.4196,.1765, 1 };
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, green);
+		glEnable(GL_COLOR_MATERIAL);
+		glColor3ub(0,50,0);//green
+		//GLfloat green[] = { .3215,.5196,.1765, 1 };
+		GLfloat green[]={0,100,0,1};
+		//glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, green);
 		//glMaterialfv(GL_FRONT, GL_EMISSION, green);
 		drawTriangle(-7,.5,.5,-.5,-.5);
 		drawTriangle(-5,-.5,.5,-1.5,-.5);
@@ -147,6 +148,7 @@ animate=stage;
 			else if(times<=0) upwards=true;
 			glutPostRedisplay();
 		}
+		glDisable(GL_COLOR_MATERIAL);
 	}
 
     void carrotPosition(float x,float y,float z){
