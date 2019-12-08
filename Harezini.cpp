@@ -16,7 +16,7 @@
 #include "./carrot/Carrot.h"
 #include "./hat/TopHat.h"
 
-World *world;
+World  *world;
 Rabbit *rabbit;
 Carrot *carrot;
 TopHat *tophat;
@@ -91,6 +91,19 @@ void initialize()
 	glShadeModel(GL_SMOOTH);
 }
 
+void reshape(GLsizei width, GLsizei height)
+{
+	if (height == 0) height = 1;
+	GLfloat aspect = (GLfloat)width / (GLfloat)height;
+	glViewport(0, 0, width, height);
+
+	glMatrixMode(GL_PROJECTION);
+
+	glLoadIdentity();
+
+	gluPerspective(45.0f, aspect, 1.0f, 2000.0f);
+}
+
 void myDisplay()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -138,33 +151,11 @@ void myDisplay()
 	}
 }
 
-void reshape(GLsizei width, GLsizei height)
+void moveCam3f (float xChange, float yChange, float zChange)
 {
-	if (height == 0) height = 1;
-	GLfloat aspect = (GLfloat)width / (GLfloat)height;
-	glViewport(0, 0, width, height);
-
-	glMatrixMode(GL_PROJECTION);
-
-	glLoadIdentity();
-
-	gluPerspective(45.0f, aspect, 1.0f, 2000.0f);
-}
-
-void specialKeyPressed(int key, int xMouse, int yMouse)
-{
-	if(key == GLUT_KEY_RIGHT){
-		xRot = (xRot - 1) % 360;
-	} else if (key == GLUT_KEY_LEFT){
-		xRot = (xRot + 1) % 360;
-	} else if (key == GLUT_KEY_UP){
-		yRot = (yRot - 1) % 360;
-	} else if (key == GLUT_KEY_DOWN){
-		yRot = (yRot + 1) % 360;
-	} else {
-		return;
-	}
-	glutPostRedisplay();
+	xPos += xChange;
+	yPos += yChange;
+	zPos += zChange;
 }
 
 void moveCamForward(float distance)
@@ -181,15 +172,20 @@ void moveCamBackward()
 	zPos += cos(xRot * DEGREES_TO_RADIAN); // 0 = 1, 180 = -1
 }
 
-void keyboardKeyPressed(unsigned char key, int xMouse, int yMouse)
+//0=x, 1=y, 2=z degrees is degrees of rotation
+void rotateCam(int direction, float degrees)
 {
-	if (key == 'r')rabbit->cycleAnimation();
-	else if(key == 'q')rabbit->cycleFancy();
-	else if(key == 'w')moveCamForward(1.0);
-	else if(key == 's')moveCamBackward();
-	else return;
-	glutPostRedisplay();
-}
+	if(direction==0){
+		xRot= (xRot-degrees);
+	}
+	if(direction==1){
+		yRot= (yRot-degrees);
+	}
+	if(direction==2){
+		//zRot= (zRot-degrees);
+	}
+
+} 
 
 void idleFunction()
 {
@@ -200,9 +196,42 @@ void idleFunction()
 	rabbit->idle(frame);
 	tophat->idle(frame);
 	carrot->idle(frame);
+
+	// Camera movement
 	if (frame < 300){
 		moveCamForward(0.1);
 	}
+
 	glutPostRedisplay();
 	frame++;
+}
+
+/*
+		REMOVE LATER
+*/
+
+void keyboardKeyPressed(unsigned char key, int xMouse, int yMouse)
+{
+	if (key == 'r')rabbit->cycleAnimation();
+	else if(key == 'q')rabbit->cycleFancy();
+	else if(key == 'w')moveCamForward(1.0);
+	else if(key == 's')moveCamBackward();
+	else return;
+	glutPostRedisplay();
+}
+
+void specialKeyPressed(int key, int xMouse, int yMouse)
+{
+	if(key == GLUT_KEY_RIGHT){
+		xRot = (xRot - 1) % 360;
+	} else if (key == GLUT_KEY_LEFT){
+		xRot = (xRot + 1) % 360;
+	} else if (key == GLUT_KEY_UP){
+		yRot = (yRot - 1) % 360;
+	} else if (key == GLUT_KEY_DOWN){
+		yRot = (yRot + 1) % 360;
+	} else {
+		return;
+	}
+	glutPostRedisplay();
 }
