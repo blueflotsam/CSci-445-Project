@@ -191,6 +191,20 @@ void keyboardKeyPressed(unsigned char key, int xMouse, int yMouse)
 	glutPostRedisplay();
 }
 
+//0=x, 1=y, 2=z degrees is degrees of rotation
+void rotateCam(int direction, float degrees){
+	if(direction==0){
+		xRot= (xRot-degrees);
+	}
+	if(direction==1){
+		yRot= (yRot-degrees);
+	}
+	if(direction==2){
+		//zRot= (zRot-degrees);
+	}
+
+} 
+
 void idleFunction()
 {
 	static int frame = 1;
