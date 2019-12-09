@@ -31,11 +31,11 @@ GLfloat zScale = 1.0f;
 
 // Camera
 double DEGREES_TO_RADIAN = M_PI / 180;
-float xPos = 0.0;
+float xPos = -20.0;
 float yPos = 0.0;
 float zPos = 0.0;
-int xRot = 0.0;
-int yRot = 0.0;
+float xRot = 90.0;
+float yRot = 0.0;
 
 // Swap buffer global
 int swapBuffer = 1;
@@ -51,14 +51,14 @@ int main(int argc, char **argv)
 	// Callback functions
 	glutDisplayFunc(myDisplay);
 	glutReshapeFunc(reshape);
-	glutKeyboardFunc(keyboardKeyPressed);
+	//glutKeyboardFunc(keyboardKeyPressed);
 	glutSpecialFunc(specialKeyPressed);
 	glutIdleFunc(idleFunction);
 	// Start program
 	initialize();
 	// initialize class objects
 	world = new World(0.0, -5.5, 0.0);
-	rabbit = new Rabbit(3.0, -2.0, -15.0, 180);
+	rabbit = new Rabbit(3.0, -2.0, 100.0, 180);
 	carrot = new Carrot(-5.0,-9.0,-93.0);
 	tophat = new TopHat(100.0, 5.0, 0.0);
 	// Main loop
@@ -165,11 +165,11 @@ void moveCamForward(float distance)
 	zPos -= distance * cos(xRot * DEGREES_TO_RADIAN); // 0 = 1, 180 = -1
 }
 
-void moveCamBackward()
+void moveCamBackward(float distance)
 {
-	xPos += sin(xRot * DEGREES_TO_RADIAN); // 90 = 1, 270 = -1
-	yPos += sin(yRot * DEGREES_TO_RADIAN); // 90 = 1, 270 = -1
-	zPos += cos(xRot * DEGREES_TO_RADIAN); // 0 = 1, 180 = -1
+	xPos += distance * sin(xRot * DEGREES_TO_RADIAN); // 90 = 1, 270 = -1
+	yPos += distance * sin(yRot * DEGREES_TO_RADIAN); // 90 = 1, 270 = -1
+	zPos += distance * cos(xRot * DEGREES_TO_RADIAN); // 0 = 1, 180 = -1
 }
 
 //0=x, 1=y, 2=z degrees is degrees of rotation
@@ -187,8 +187,9 @@ void rotateCam(int direction, float degrees)
 
 } 
 
+
 void idleFunction()
-{
+{	
 	static int frame = 1;
 	/*
 		GROUP: place class idle function here
@@ -197,11 +198,55 @@ void idleFunction()
 	tophat->idle(frame);
 	carrot->idle(frame);
 
-	// Camera movement
-	if (frame < 300){
-		moveCamForward(0.1);
+	// Pan around landscape, 16.67 seconds
+	if (frame < 500){
+		moveCamForward(0.2);
+		rotateCam(0, -0.54);
 	}
-
+	// Follow behind rabbit, 10 seconds
+	else if (frame < 800) {
+		moveCamForward(0.2);
+	} 
+	// Rabbit turns to see hat, camera does nothing
+	else if (frame < 845) {
+		// Do nothing
+	}
+	// Turn to see hat
+	else if (frame < 875) {
+		rotateCam(0, 1);
+	}
+	// Wait to view hat for longer
+	else if (frame < 900) {
+		// Do nothing
+	}
+	// Jump to in front of Rabbit
+	else if (frame == 900) {
+		float *rabbitPos = rabbit->getLocation();
+		xPos = rabbitPos[0] + 10;
+		yPos = rabbitPos[1];
+		zPos = rabbitPos[2];
+		xRot = 90;
+		yRot = 15.0;
+	}
+	// Rabbit spins
+	else if (frame < 1020) {
+		// Do nothing
+	}
+	// Move camera back to see rabbit and hat
+	else if (frame < 1050) {
+		moveCamBackward((frame-1020)/20);
+		moveCam3f(0.0, 0.0, 0.4);
+		rotateCam(0, 2.2);
+	}
+	// Wait
+	else if (frame < 1215) {
+		// Do nothing
+	}
+	// turn to look at hat as it enlarges
+	else if (frame < 1260) {
+		rotateCam(0, 0.3);
+	}
+	
 	glutPostRedisplay();
 	frame++;
 }
@@ -215,7 +260,7 @@ void keyboardKeyPressed(unsigned char key, int xMouse, int yMouse)
 	if (key == 'r')rabbit->cycleAnimation();
 	else if(key == 'q')rabbit->cycleFancy();
 	else if(key == 'w')moveCamForward(1.0);
-	else if(key == 's')moveCamBackward();
+	else if(key == 's')moveCamBackward(1.0);
 	else return;
 	glutPostRedisplay();
 }
@@ -223,13 +268,13 @@ void keyboardKeyPressed(unsigned char key, int xMouse, int yMouse)
 void specialKeyPressed(int key, int xMouse, int yMouse)
 {
 	if(key == GLUT_KEY_RIGHT){
-		xRot = (xRot - 1) % 360;
+		xRot = (xRot - 1);
 	} else if (key == GLUT_KEY_LEFT){
-		xRot = (xRot + 1) % 360;
+		xRot = (xRot + 1);
 	} else if (key == GLUT_KEY_UP){
-		yRot = (yRot - 1) % 360;
+		yRot = (yRot - 1);
 	} else if (key == GLUT_KEY_DOWN){
-		yRot = (yRot + 1) % 360;
+		yRot = (yRot + 1);
 	} else {
 		return;
 	}

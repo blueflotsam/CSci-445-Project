@@ -18,28 +18,76 @@ class Carrot
 	float ypos;
 	float zpos;
     //Rotation
-    float xrot=0;
-    float yrot=0;
-    float zrot=0;
-    float angle=0;
+    float xrot;
+    float yrot;
+    float zrot;
+    float angle;
     //Other global variables
-    double rate=2.5;
+    double rate;
 	float d[3];
 	float times;//what time in the animation the object is in, incriments by one for each movement
 	float ambientStrength;
-	GLuint ConeMap;
 	bool animate;
 	bool upwards;
 	GLUquadricObj *sphere;
 
-	void TEXTURE_MODEL(void){
+	GLuint texture[1];
+	int numTextures;
+
+	/*
+			Loads the textures to be used later
+	*/
+	void loadTextures() {
+		int width, height, nrChannels, texture_index;
+		char *texture_file;
+		unsigned char *data;
+
+		// Allocate raygl texture space
+		#if RAYGL == 1
+		Image *image[numTextures];
+		for (int i = 0; i < numTextures; i++){
+			image[i] = (Image *) malloc(sizeof(Image));
+			if (image[i] == NULL) exit(0);
+		}
+		#endif
+
+		// Load Carrot texture
+		texture_file = (char *)CARROT_FILE;
+		texture_index = 0;
+		#if RAYGL == 1
+		if (!imageLoad(texture_file, image[texture_index])) exit(0);
+		#else
+		data = stbi_load(texture_file, &width, &height, &nrChannels, 0);
+		if (!data){
+				printf("Unable to load \"%s\", exiting program\n", texture_file);
+				stbi_image_free(data);
+				exit(-1);
+		}
+		#endif
+		glGenTextures(numTextures, &texture[texture_index]);
+		glBindTexture(GL_TEXTURE_2D, texture[texture_index]);
+		// Set texture wrapping options for bound texture
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		#if RAYGL == 1
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, image[texture_index]->sizeX, image[texture_index]->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image[texture_index]->data);
+		#else
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		//glGenerateMipmap(GL_TEXTURE_2D);
+		stbi_image_free(data);
+		#endif
+	}
+
+	/*void TEXTURE_MODEL(void){
 		int w, h, c;
 		char *arr=(char*)CARROT_FILE;
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 		unsigned char *data= stbi_load(arr, &w,&h,&c,0);
-		glGenTextures(1, &ConeMap);
-		glBindTexture(GL_TEXTURE_2D, ConeMap);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT); 
@@ -47,7 +95,7 @@ class Carrot
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 		stbi_image_free(data);
-	}
+	}*/
 
 	void drawTriangle(float x, float y, float z, float y1, float z1){
 		float midz=(z+z1)/2;
@@ -84,7 +132,13 @@ class Carrot
 		animate=false;
 		upwards=true;
 		sphere =gluNewQuadric();
-		TEXTURE_MODEL();
+		xrot=0;
+    	yrot=0;
+    	zrot=0;
+    	angle=0;
+    	rate=2.5;
+    	numTextures = 1;
+		loadTextures();
 	}
 
 /*void animate(bool stage){
@@ -100,12 +154,12 @@ animate=stage;
 		glTranslatef(-.8,0,0);
 		glDisable(GL_TEXTURE_2D);
 		gluQuadricTexture(sphere, GL_TRUE);
-		glBindTexture(GL_TEXTURE_2D, ConeMap);
+		glBindTexture(GL_TEXTURE_2D, texture[0]);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 		glEnable(GL_COLOR_MATERIAL);
 		glColor3ub(0,50,0);//green
 		//GLfloat green[] = { .3215,.5196,.1765, 1 };
-		GLfloat green[]={0,100,0,1};
+		//GLfloat green[]={0,100,0,1};
 		//glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, green);
 		//glMaterialfv(GL_FRONT, GL_EMISSION, green);
 		drawTriangle(-7,.5,.5,-.5,-.5);
@@ -170,8 +224,8 @@ animate=stage;
 
 	void idle (int frame){
 		//frame by frame animation goes here
-        carrotAnimation(times+=rate);
-        if(times>100||times<0)
-            rate*=-1;
+        //carrotAnimation(times+=rate);
+        //if(times>100||times<0)
+            //rate*=-1;
 	}
 };

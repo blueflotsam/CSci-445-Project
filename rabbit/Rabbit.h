@@ -88,7 +88,7 @@ class Rabbit
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		#if RAYGL == 1
-		glTexImage2DGL_TEXTURE_2D, 0, GL_RGB8, image[texture_index]->sizeX, image[texture_index]->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image[texture_index]->data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, image[texture_index]->sizeX, image[texture_index]->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image[texture_index]->data);
 		#else
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 		//glGenerateMipmap(GL_TEXTURE_2D);
@@ -255,6 +255,13 @@ class Rabbit
 		if (animation == TOTAL_ANIMATIONS)animation = IDLE;
 	}
 
+	float *getLocation () {
+		float *pos;
+		float temp[] = {xOrig, yOrig, zOrig};
+		pos = temp;
+		return pos;
+	}
+
 	void setAnimation(int set){
 		// Set animation
 		animation = set;
@@ -268,13 +275,46 @@ class Rabbit
 	void idle(int frame){
 		if (frame == 1){
 			setAnimation(JUMPING);
-			zOrig -= 0.1;
-		} else if (frame < 300){
-			zOrig -= 0.1;
-		} else if (frame == 300){
+			zOrig -= 0.2;
+		} else if (frame < 800){
+			zOrig -= 0.2;
+		} else if (frame == 800){
+			setAnimation(IDLE);
+		} else if (frame < 845) {
+			rotation += -2;
+		} else if (frame < 900) {
+			// Do nothing
+		} else if (frame < 990) {
+			// 1.5 spins
+		} else if (frame == 990) {
+			cycleFancy();
+		} else if (frame < 1020) {
+			// .5 spin
+		} else if (frame < 1050) {
+			// Do nothing
+		} else if (frame == 1050) {
+			setAnimation(JUMPING);
+			xOrig += 0.1;
+		} else if (frame < 1150) {
+			xOrig += 0.1;
+		} else if (frame == 1150) {
+			setAnimation(IDLE);
+			rightPoint += 2;
+		} else if (frame < 1175) {
+			rightPoint += 2;
+		} else if (frame < 1200) {
+			rightPoint -= 2;
+		} else if (frame < 1215) {
+			// Wait half second
+		} else if (frame == 1215) {
+			setAnimation(JUMPING);
+			xOrig -= 0.05;
+		} else if (frame < 1260) {
+			xOrig -= 0.05; // back away from hat as it enlarges
+		} else if (frame == 1260) {
 			setAnimation(IDLE);
 		}
-
+		
 		if (animation == RIGHT_POINT){
 			rightPoint += 1.0;
 			if(rightPoint > 70)rightPoint = RIGHT_POINT_DEF;

@@ -51,7 +51,7 @@ void myDisplay();
 void moveCam3f (float xChange, float yChange, float zChange);
 void moveCamForward();
 void moveCamBackward();
-void rotateCam(int direction, float degrees)
+void rotateCam(int direction, float degrees);
 void idleFunction();
 
 /*
