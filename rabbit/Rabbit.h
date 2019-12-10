@@ -272,7 +272,7 @@ class Rabbit
 		squish = SQUISH_DEF;
 	}
 
-	void idle(int frame){
+		void idle(int frame){
 		if (frame == 1){
 			setAnimation(JUMPING);
 			zOrig -= 0.2;
@@ -280,38 +280,41 @@ class Rabbit
 			zOrig -= 0.2;
 		} else if (frame == 800){
 			setAnimation(IDLE);
-		} else if (frame < 845) {
+		} 
+        else if(frame<830){
+            //wait
+        }else if (frame < 875) {
 			rotation += -2;
-		} else if (frame < 900) {
+		} else if (frame < 930) {
 			// Do nothing
-		} else if (frame < 1020) {
+		} else if (frame < 1050) {
 
-            if (frame == 960) {
+            if (frame == 990) {
 			    cycleFancy();
             }
             rotation+=3;
-		} else if (frame < 1080) {
+		} else if (frame < 1110) {
 			// Do nothing
-		} else if (frame == 1080) {
+		} else if (frame == 1110) {
 			setAnimation(JUMPING);
 			xOrig += 0.1;
-		} else if (frame < 1180) {
+		} else if (frame < 1210) {
 			xOrig += 0.1;
-		} else if (frame == 1180) {
+		} else if (frame == 1210) {
 			setAnimation(IDLE);
 			rightPoint += 2;
-		} else if (frame < 1205) {
+		} else if (frame < 1235) {
 			rightPoint += 2;
-		} else if (frame < 1230) {
+		} else if (frame < 1260) {
 			rightPoint -= 2;
-		} else if (frame < 1245) {
+		} else if (frame < 1275) {
 			// Wait half second
 		} else if (frame == 1245) {
 			setAnimation(JUMPING);
 			xOrig -= 0.05;
-		} else if (frame < 1290) {
+		} else if (frame < 1320) {
 			xOrig -= 0.05; // back away from hat as it enlarges
-		} else if (frame == 1290) {
+		} else if (frame == 1320) {
 			setAnimation(IDLE);
 		}
 		
@@ -329,11 +332,23 @@ class Rabbit
 				squish = SQUISH_DEF;
 			}
 		}
-        else if(frame<1320){
+        else if(frame<1380){
             //nothing
         }
         //wants carrot
-        else if(frame<1410){
+        else if(frame<1470){
+            //beckons hat to make carrot
+            leftPoint+=1;
+        }
+        else if(frame<1740){
+            //nothing may want to hop in anger before this
+        }
+        //hops in anger
+        else if(frame=1740){
+            setAnimation(JUMPING);
+        }
+        //shakes head for 80 frames multiple of four is good
+        else if(frame<1820){
             
         }
 	}
