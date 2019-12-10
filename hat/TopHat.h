@@ -537,18 +537,31 @@ if(moveLegs > 0)
             x=90;
             z=180;
         }
-        else if(frame<1245){
+        else if(frame<1275){
             //do nothing
         }
         //hat becomes alive
-        else if(frame==1245)
+        else if(frame==1275)
             isAlive=true;
         //hat grows
-        else if(frame<1290){
+        else if(frame<1320){
             scale(scaleX+=.01,scaleY+=.01,scaleZ+=.01);
-
             yOrig+=.2;
-
+        }
+        else if(frame<1485){
+            //wait
+        }
+        else if(frame==1485){
+            //draw chair in hat
+            glPushMatrix();
+            glTranslatef(xOrig+1,yOrig+1,zOrig+1);
+            glScalef(3,3,3);
+            drawChair();
+            glPopMatrix();
+            glutPostRedisplay();
+        }
+        else if(frame<1740){
+            animateArms();
         }
             
 	
