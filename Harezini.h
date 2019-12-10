@@ -13,6 +13,10 @@
 #define LIGHTING_TYPE GL_AMBIENT_AND_DIFFUSE
 
 // Libraries
+#include <iostream>
+#include <fstream> 
+#include <string>
+#include <stdlib.h>
 #include <GL/freeglut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
