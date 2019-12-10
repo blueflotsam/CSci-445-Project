@@ -8,6 +8,7 @@
 
 #include "../Harezini.h"
 
+
 #define ROAD_FILE 	"./world/road_texture.jpg"
 #define GRASS_FILE 	"./world/grass_texture.jpg"
 #define SKY_FILE		"./world/sky_texture.jpg"
@@ -223,7 +224,7 @@ class World
              
         @ = (xpos, ypos, zpos) coordinate in relation to the tree
     */
-    static void drawTree(float xpos, float ypos, float zpos){
+    static void drawTree(float xpos, float ypos, float zpos,float tHeight){
         glTranslatef(xpos, ypos, zpos);
         GLUquadricObj *leaves;
         GLUquadricObj *trunk;
@@ -232,16 +233,14 @@ class World
         float leavesRadius=5;
         float leavesSharpness=9;
         float trunkRadius=1;
-        float trunkHeight=10;
+        float trunkHeight=tHeight;
         float trunkSharpness=14;
         glMaterialfv(GL_FRONT, LIGHTING_TYPE, BLACK);
         glRotatef(90,-90,0,0);
         gluCylinder(trunk,trunkRadius,trunkRadius,trunkHeight,trunkSharpness,trunkSharpness);
         glMaterialfv(GL_FRONT, LIGHTING_TYPE, GREEN);
         glTranslatef(0,0,trunkHeight);
-        gluSphere(leaves,leavesRadius,leavesSharpness,leavesSharpness);
-        
-        
+        gluSphere(leaves,leavesRadius,leavesSharpness,leavesSharpness);        
     }
 
 	public:
@@ -300,8 +299,16 @@ class World
 		drawGrass(495.0, 1000.0);
 		glTranslatef( 505.0, 0.0, 0.0);
 		drawGrass(495.0, 1000.0);
-        
-        drawTree(-10,0,0);
+        //reading treeSpacing file to see where to draw trees
+        std::ifstream file;
+        file.open("treeSpacing.txt");
+        float x,y,z,h;
+        while(file>>x>>y>>z>>h){
+            glPushMatrix();
+            glTranslatef(-252,0,0);
+            drawTree(x,y,z,h);
+            glPopMatrix();
+        }
 
 	}
 };
