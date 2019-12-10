@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 	// Callback functions
 	glutDisplayFunc(myDisplay);
 	glutReshapeFunc(reshape);
-	//glutKeyboardFunc(keyboardKeyPressed);
+	glutKeyboardFunc(keyboardKeyPressed);
 	glutSpecialFunc(specialKeyPressed);
 	glutIdleFunc(idleFunction);
 	// Start program
@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 	world = new World(0.0, -5.5, 0.0);
 	rabbit = new Rabbit(3.0, -2.0, 100.0, 180);
 	carrot = new Carrot(-5.0,-9.0,-93.0);
-	tophat = new TopHat(100.0, 5.0, 0.0);
+	tophat = new TopHat(22, -4, -60);
 	// Main loop
 	glutMainLoop();
 	// Cleanup
@@ -112,8 +112,8 @@ void myDisplay()
 	// Material for povray
 	glColor3fv(matAmbient);
 
-	#if RAYGL == 1
-	rayglFrameBegin((char*)"./frames/frame");
+	#if RAYGL == 0
+	rayglFrameBegin((char*)"frames.txt");
 	setFadeDistance(1000.0);
 	setFadePower(2.0);
 	#endif
@@ -222,29 +222,36 @@ void idleFunction()
 	// Jump to in front of Rabbit
 	else if (frame == 900) {
 		float *rabbitPos = rabbit->getLocation();
-		xPos = rabbitPos[0] + 10;
+		xPos = rabbitPos[0] + 15;
 		yPos = rabbitPos[1];
 		zPos = rabbitPos[2];
 		xRot = 90;
-		yRot = 15.0;
+		yRot = -10.0;
 	}
 	// Rabbit spins
-	else if (frame < 1020) {
+	else if (frame < 1050) {
 		// Do nothing
 	}
 	// Move camera back to see rabbit and hat
-	else if (frame < 1050) {
-		moveCamBackward((frame-1020)/20);
+	else if (frame < 1080) {
+		moveCamBackward((frame-1050)/20);
 		moveCam3f(0.0, 0.0, 0.4);
 		rotateCam(0, 2.2);
 	}
 	// Wait
-	else if (frame < 1215) {
+	else if (frame < 1245) {
 		// Do nothing
 	}
 	// turn to look at hat as it enlarges
-	else if (frame < 1260) {
+	else if (frame < 1290) {
 		rotateCam(0, 0.3);
+	}
+	//repositions camera
+	else if(frame<1320){
+		rotateCam(0,.23);
+		rotateCam(1,-.05);
+		yPos+=.11;
+		xPos-=.20;
 	}
 	
 	glutPostRedisplay();
@@ -257,9 +264,7 @@ void idleFunction()
 
 void keyboardKeyPressed(unsigned char key, int xMouse, int yMouse)
 {
-	if (key == 'r')rabbit->cycleAnimation();
-	else if(key == 'q')rabbit->cycleFancy();
-	else if(key == 'w')moveCamForward(1.0);
+	if(key == 'w')moveCamForward(1.0);
 	else if(key == 's')moveCamBackward(1.0);
 	else return;
 	glutPostRedisplay();
