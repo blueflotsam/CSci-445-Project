@@ -20,11 +20,14 @@ class TopHat
     int uarmR;
     int moveLegs;
     int thighR, thighL, shinR, shinL, moveArms, larmL, larmR;
-
+    bool isAlive;
+    float scaleX,scaleY,scaleZ;
+    float degree;
 	// Position values
 	float xOrig;
 	float yOrig;
 	float zOrig;
+    float x,y,z;
 
 	// Textures:
 	int numTextures; // gets set in constructor via HAT_TEXTURE_NUM
@@ -189,7 +192,8 @@ class TopHat
 		this->moveArms = 0;
 		this->larmL = 0;
 		this->larmR = 0;
-        this->moveLegs = 180;
+        this->moveLegs = 180; 
+        this->isAlive=false;
 		loadTextures();
 	}
 	TopHat(float xOrig, float yOrig, float zOrig){
@@ -207,10 +211,19 @@ class TopHat
 		this->larmL = 0;
 		this->larmR = 0;
         this->moveLegs = 180;
+        this->scaleX=.1;
+        this->scaleY=.1;
+        this->scaleZ=.1;
+        this->isAlive=false;
+        this->degree=-90;
+        this->x=0;
+        this->y=0;
+        this->z=0;
 		loadTextures();
 	}
 
 	void draw(){
+        glTranslatef(xOrig,yOrig,zOrig);
 		bodyPart = gluNewQuadric();
 		gluQuadricDrawStyle(bodyPart, GLU_FILL);
         glEnable(GL_TEXTURE_2D);
@@ -223,25 +236,32 @@ class TopHat
 			rayglRotateTexture(0, 0, 0);
 			rayglTextureType(0);
 		#endif
-		glRotatef(90.0, 90.0, 0.0, 0.0);
-		glScalef(.05, .05, .05);
+		glRotatef(x, 1, 0, 0);
+		glRotatef(y, 0, 1, 0);
+        glRotatef(z, 0, 0, 1);        
+		glScalef(scaleX, scaleY, scaleZ);
         glPushMatrix();
         DrawBody();
         glPopMatrix();
         glPushMatrix();
         glDisable(GL_TEXTURE_2D);
-        DrawEyes();
+        if(isAlive)
+            DrawEyes();
         glPopMatrix();
         glEnable(GL_TEXTURE_2D);
         glPushMatrix();
-        DrawLeftArm();
+        if(isAlive)
+            DrawLeftArm();
         glPopMatrix();
         glPushMatrix();
-        DrawRightArm();
+        if(isAlive)
+            DrawRightArm();
         glPopMatrix();
 	    glPushMatrix();
-	    DrawLeftLeg();
-	    DrawRightLeg();
+        if(isAlive){
+	        DrawLeftLeg();
+	        DrawRightLeg();
+        }
 	    glPopMatrix();
 	    glDisable(GL_TEXTURE_2D);
 	}
@@ -459,12 +479,8 @@ class TopHat
 		glEnd();
 	}
 
-    void idle(int frame)
-    {
-	    if(0 > -1) // 
-	    {
-	
-		    if(moveArms >= 0)
+    void animateArms(){
+    		    if(moveArms >= 0)
 		    {
 			    moveArms = moveArms + 1;
 			    uarmL = uarmL - 1;
@@ -484,10 +500,10 @@ class TopHat
 			    larmL = larmL + 1;
 			    larmR = larmR - 1;
 		    }
-	
-	
-	
-		    if(moveLegs > 0)
+    }
+
+    void AnimateLegs(){
+if(moveLegs > 0)
 		    {
 			    thighR = (thighR + 2) % 360;
 			    thighL = (thighL - 1) % 360;
@@ -507,8 +523,36 @@ class TopHat
 			    }
 			    glutPostRedisplay();
 		    }	
-		   // keepMoving++;
-	    }
+    }
+    
+    void scale(float x, float y, float z){
+        scaleX=x;
+        scaleY=y;
+        scaleZ=z;
+    }
+
+    void idle(int frame)
+    {
+        if(frame==1){
+            x=90;
+            z=180;
+        }
+        else if(frame<1245){
+            //do nothing
+        }
+        //hat becomes alive
+        else if(frame==1245)
+            isAlive=true;
+        //hat grows
+        else if(frame<1290){
+            scale(scaleX+=.01,scaleY+=.01,scaleZ+=.01);
+
+            yOrig+=.2;
+
+        }
+            
+	
+		    
 
     }
 };
