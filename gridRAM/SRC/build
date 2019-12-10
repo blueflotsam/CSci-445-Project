@@ -1,0 +1,6 @@
+clear
+make gridRAM 
+mv gridRAM ../BIN
+
+make movieRAM 
+mv movieRAM ../BIN

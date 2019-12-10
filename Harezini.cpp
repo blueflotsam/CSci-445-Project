@@ -80,9 +80,9 @@ void initialize()
 	glDepthFunc(GL_LEQUAL);
 	glCullFace(GL_BACK);
 	// Light
-	GLfloat lightpos[]={999,999,999,1};
+	GLfloat lightpos[]={100,999,100,1};
 	#if RAYGL == 1
-		GLfloat lightamb[]={0.6,0.6,0.6,1.0};
+		GLfloat lightamb[]={1.0,1.0,1.0,1.0};
 		GLfloat lightdif[]={1.0,1.0,1.0,1.0};
 	#else
 		GLfloat lightamb[]={1.0,1.0,1.0,1.0};
@@ -133,7 +133,7 @@ void myDisplay()
 	glColor3fv(matAmbient);
 
 	#if RAYGL == 1
-	rayglFrameBegin((char*)"frames.txt");
+	rayglFrameBegin((char*)"./gridRAM/BIN/frames");
 	setFadeDistance(1000.0);
 	setFadePower(2.0);
 	#endif

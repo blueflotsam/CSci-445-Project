@@ -1,0 +1,144 @@
+ #!/bin/bash
+
+# SCRIPT NAME: catavi
+# FUNCTION: Concatenate (join) avi files to specified output file
+# EXPECTED USAGE:  catavi [files to join]
+# PARAMETERS & OPTIONS: none
+# RETURNS: none
+# DEPENDANCIES: bash, gawk, cut, file, cat, mencoder
+# INPUT FILES: as specified
+# OUTPUT FILES: as specfied
+#
+# DEVELOPED BY -
+# CREATION DATE - Sun Aug 11 2002
+# REVISION NUMBER -  0.1
+# REVISION DATE -
+# DEVELOPMENT ENVIRONMENT - Linux 2.4.18-5.24 i686; Red Hat 7.3 (Limbo); BASH Version 2.05a
+# COMMENTS -
+
+# +--------------------------------------------------------------------------------------------------+
+# +                                            BEGIN SCRIPT                                          +
+# +--------------------------------------------------------------------------------------------------+
+
+# ============================================ FUNCTION SECTION =======================================
+check4apps() {
+        for exe in bash gawk cut file cat mencoder ; do
+                if [ -z "`which $exe`" ]; then
+                        echo "ERROR: $exe was not found!"
+                        echo "This application is needed by this script, execution cannot continue."
+                        exit 1
+                fi
+        done
+
+}
+
+getFstats() {
+        FILESTATS=`ls -lah "$1" | gawk ' BEGIN {OFS="@"} {print $1, $3, $4, $5, $6, $7, $8 ; }'`@`file -b "$1"`
+        FPERMS=`echo $FILESTATS | cut -f 1 -d@`
+        FOWNER=`echo $FILESTATS | cut -f 2 -d@`
+        FGROUP=`echo $FILESTATS | cut -f 3 -d@`
+        FSIZE=`echo $FILESTATS | cut -f 4 -d@`
+        FDATE=`echo $FILESTATS | cut -f 5 -d@`
+        FTIME=`echo $FILESTATS | cut -f 6 -d@`
+        FNAME=`echo $FILESTATS | cut -f 7 -d@`
+        FTYPE=`echo $FILESTATS | cut -f 8 -d@`
+}
+
+showFstats() {
+        getFstats "$1"
+        echo -e "FILENAME: $FNAME \t\t SIZE: $FSIZE"
+        echo -e "FILETYPE: $FTYPE"
+        echo -e "OWNER: $FOWNER \t\t GROUP: $FGROUP"
+        echo -e "PERMISSIONS: $FPERMS "
+        echo -e "MOD DATE: $FDATE \t\t MOD TIME: $FTIME"
+}
+
+verifyChoice() {
+        read -p "$1" -n 1 -s VERIFY
+        case "$VERIFY" in
+                [yY]) echo ""; echo "Ok...";;
+                [nN]) echo ""; echo "Cancelled." ; exit 0 ;;
+        esac
+}
+
+fixindex(){
+        echo "Regenerating index..."
+        mencoder -ovc copy -oac copy -forceidx -o "$CATFILE" "$TMPFILE"
+        if [ $? -eq 0 ]; then
+                echo "Complete."
+        else
+                echo "Failed!"
+        fi
+        return
+}
+
+killSources() {
+        read -p "Do you want to remove source files?" -n 1 -s KILLSRC
+        case "$KILLSRC" in
+                [yY]) echo ""; echo -e "Removing source files...\c"; rm -f "$@"; echo "done." ;;
+                [nN]) echo ""; echo "Source files not removed." ;;
+        esac
+}
+
+# ========================================== END FUNCTION SECTION ======================================
+
+# ======================================= VARIABLE DECLARATION SECTION =================================
+check4apps
+
+# VERIFY INPUT FILES
+if [ $# -lt 2 ]; then
+        echo "Only one file was passed through!"
+        echo "At least two files to concatenate must be supplied..."
+        exit 1
+fi
+
+# VERIFY FILE CONCATENATION ORDER
+echo "The files passed through will be concatenated in the following order..."
+for FILE in $*
+do
+        FILECNT=$(($FILECNT+1))
+        echo "File $FILECNT -->  `basename "$FILE"`"
+done
+echo "======"
+verifyChoice "Is this order correct? [Y/N]"
+
+# GET OUTPUT FILENAME
+echo "Please enter the name of the target file to concatenate to "
+echo "(CAUTION: if this file already exists, it will be overwritten!)"
+read -p "Enter filename: " CATFILE
+echo "The name of the concatenated file will be $CATFILE"
+verifyChoice "Is this correct? [Y/N]"
+TMPFILE="/tmp/tmpavi`dd if=/dev/urandom bs=4 count=8 | tr -cd '[:alnum:]'`"
+# ===================================== END VARIABLE DECLARATION SECTION ===============================
+if touch "$TMPFILE" ; then
+        echo "Commencing concatenation...."
+        for NXTFILE in $*
+        do
+                FCNT=$(($FCNT+1))
+                if cat "$NXTFILE" >> "$TMPFILE" ; then :
+                else
+                        echo "ERROR - Failure reading $NXTFILE..."
+                        echo "Execution failed"
+                        exit 1
+                fi
+        done
+else
+        echo "ERROR - Failure writing $TMPFILE..."
+        echo "Execution failed"
+        exit 1
+fi
+
+fixindex
+echo "Concatenation complete."
+echo "Final info:"
+echo "$FCNT files were concatenated to the file $CATFILE"
+showFstats "$CATFILE"
+if [ -f "$TMPFILE" ]; then
+        rm -f $TMPFILE
+fi
+killSources "$@"
+echo "<<<Finished>>>"
+exit 0
+
+# +------------------------------------------------- END SCRIPT ----------------------------------------+
+

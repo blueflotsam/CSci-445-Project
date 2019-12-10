@@ -1,0 +1,1 @@
+/root/povray-3.6.1/unix/povray +i/root/povray-3.6.1/scenes/advanced/$1.pov -f +d +p +v +w$2 +h$3 +a0.3 +L/root/povray-3.6.1/include

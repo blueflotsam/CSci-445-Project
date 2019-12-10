@@ -39,7 +39,7 @@
 #endif
 
 // RAYGL
-#define RAYGL 0
+#define RAYGL 1
 #if RAYGL == 1
 	#include "./raygl/raygl.h"
 	#include "./raygl/raygldefs.h"

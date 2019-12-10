@@ -20,5 +20,3 @@ clean:
 	rm -f $(PROG)
 clean-raygl:
 	rm -f $(RAYGL).o
-clean-frames:
-	rm frames/*

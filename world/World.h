@@ -169,9 +169,17 @@ class World
 	static void drawSky(float xSize, float zSize){
 		xSize /= 2;
 		zSize /= 2;
+
+		// Texture Change
+		#if RAYGL == 1
+			rayglScaleTexture(1000, 1000, 1);
+			rayglTranslateTexture(0, 0, 0);
+			rayglRotateTexture(0, 0, 0);
+			rayglTextureType(0);
+		#endif
+		// Back
 		glBegin(GL_QUADS);
 			glMaterialfv(GL_FRONT, LIGHTING_TYPE, BLUE);
-			// Back
 			glNormal3f( 0.0, 0.0, 1.0);
 			glTexCoord2f(0.0, 1.0);
 			glVertex3f(-xSize,   0.0,-zSize);
@@ -181,7 +189,16 @@ class World
 			glVertex3f( xSize, xSize + zSize,-zSize);
 			glTexCoord2f(0.0, 0.0);
 			glVertex3f(-xSize, xSize + zSize,-zSize);
-			// Front
+		glEnd();
+		// Texture Change
+		#if RAYGL == 1
+			rayglScaleTexture(1000, 1000, 1);
+			rayglTranslateTexture(0, 0, 0);
+			rayglRotateTexture(0, 0, 0);
+			rayglTextureType(0);
+		#endif
+		// Front
+		glBegin(GL_QUADS);
 			glNormal3f( 0.0, 0.0,-1.0);
 			glTexCoord2f(1.0, 1.0);
 			glVertex3f(-xSize,   0.0, zSize);
@@ -191,7 +208,16 @@ class World
 			glVertex3f( xSize, xSize + zSize, zSize);
 			glTexCoord2f(0.0, 1.0);
 			glVertex3f( xSize,   0.0, zSize);
-			// Right
+		glEnd();
+		// Texture Change
+		#if RAYGL == 1
+			rayglScaleTexture(1000, 1000, 1);
+			rayglTranslateTexture(0, 0, 0);
+			rayglRotateTexture(90, 90, 90);
+			rayglTextureType(0);
+		#endif
+		// Right
+		glBegin(GL_QUADS);
 			glNormal3f( 1.0, 0.0, 0.0);
 			glTexCoord2f(0.0, 1.0);
 			glVertex3f( xSize,   0.0,-zSize);
@@ -201,7 +227,16 @@ class World
 			glVertex3f( xSize, xSize + zSize, zSize);
 			glTexCoord2f(0.0, 0.0);
 			glVertex3f( xSize, xSize + zSize,-zSize);
-			// Left
+		glEnd();
+		// Texture Change
+		#if RAYGL == 1
+			rayglScaleTexture(1000, 1000, 1);
+			rayglTranslateTexture(0, 0, 0);
+			rayglRotateTexture(90, 90, 90);
+			rayglTextureType(0);
+		#endif
+		// Left
+		glBegin(GL_QUADS);
 			glNormal3f(-1.0, 0.0, 0.0);
 			glTexCoord2f(1.0, 1.0);
 			glVertex3f(-xSize,   0.0,-zSize);
@@ -272,12 +307,6 @@ class World
 		// Sky
 		glBindTexture(GL_TEXTURE_2D, texture[SKY]);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-		#if RAYGL == 1
-			rayglScaleTexture(1, 1, 1);
-			rayglTranslateTexture(0, 0, 0);
-			rayglRotateTexture(0, 0, 0);
-			rayglTextureType(0);
-		#endif
 		drawSky(1000.0, 1000.0);
 		// Road
 		glBindTexture(GL_TEXTURE_2D, texture[ROAD]);
@@ -293,7 +322,7 @@ class World
 		glBindTexture(GL_TEXTURE_2D, texture[GRASS]);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 		#if RAYGL == 1
-			rayglScaleTexture(1, 1, 1);
+			rayglScaleTexture(500, 500, 1);
 			rayglTranslateTexture(0, 0, 0);
 			rayglRotateTexture(0, 0, 0);
 			rayglTextureType(0);
