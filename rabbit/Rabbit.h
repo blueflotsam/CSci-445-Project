@@ -37,6 +37,7 @@ class Rabbit
 	float leftSwing;
 	float rightFlex;
 	float leftFlex;
+	float n;
 
 	// Position Values
 	float xOrig;
@@ -244,6 +245,7 @@ class Rabbit
 		this->dx=0;
         	this->dy=0;
         	this->dz=0;
+		this->n=1;
 		this->rotation = rotation;
 		numTextures = RABBIT_TEXTURE_NUM;
 		animation = 0;
