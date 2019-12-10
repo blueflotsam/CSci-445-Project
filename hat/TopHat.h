@@ -567,6 +567,33 @@ if(moveLegs > 0)
         }
         else if(frame<1740){
             animateArms();
+            //add chair moving
+        }
+        else if(frame<1820){
+            //nothing
+        }
+        else if(frame<2075){
+            animateArms();
+            //grab teapot
+        }
+        else if(frame<2170){
+            //nothing
+        }
+        else if(frame<2700){
+            animateArms();
+            //grabs teapots two times    
+        }
+        else if(frame<2730){
+            //do nothing
+        }
+        else if(frame==2730){
+            AnimateLegs();
+        }
+        else if(frame<2790){
+            yOrig+=.1;
+        }
+        else if(frame<2880){
+            y+=2;
         }
             
 	
