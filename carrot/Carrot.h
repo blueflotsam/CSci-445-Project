@@ -225,10 +225,20 @@ animate=stage;
     drawCarrot();
     }
 
-	void idle (int frame){
-		//frame by frame animation goes here
-        //carrotAnimation(times+=rate);
-        //if(times>100||times<0)
-            //rate*=-1;
+void idle (int frame){
+        if(frame<2880){
+            //do nothing
+        }
+        else if(frame==2880){
+            zrot-=90;
+            carrotPosition(23,35,-65);
+            
+        }
+        else if(frame<2940){
+            ypos-=.68;
+        }
+        else if(frame<2950){
+            zrot-=9.01;
+        }
 	}
 };
