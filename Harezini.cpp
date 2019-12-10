@@ -112,7 +112,7 @@ void myDisplay()
 	// Material for povray
 	glColor3fv(matAmbient);
 
-	#if RAYGL == 0
+	#if RAYGL == 1
 	rayglFrameBegin((char*)"frames.txt");
 	setFadeDistance(1000.0);
 	setFadePower(2.0);
