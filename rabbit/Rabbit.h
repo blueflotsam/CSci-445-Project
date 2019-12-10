@@ -57,6 +57,9 @@ class Rabbit
 		char *texture_file;
 		unsigned char *data;
 
+		// Helps with raygl texture problems?
+		glPixelStorei(GL_UNPACK_ALIGNMENT);
+
 		// Allocate raygl texture space
 		#if RAYGL == 1
 		Image *image[numTextures];
