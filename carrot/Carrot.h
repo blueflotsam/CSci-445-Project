@@ -43,7 +43,7 @@ class Carrot
 		unsigned char *data;
 
 		// Helps with raygl texture problems?
-		glPixelStorei(GL_UNPACK_ALIGNMENT);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 		// Allocate raygl texture space
 		#if RAYGL == 1
