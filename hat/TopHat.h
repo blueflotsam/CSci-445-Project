@@ -129,7 +129,8 @@ class TopHat
 	    //Forearm
 		    glRotatef(larmL, -50.0, 10.0, 0.0);
 		    gluCylinder(bodyPart, 1.0, 1.0, 6.0, 30, 30);
-		    gluDisk(bodyPart, 0.0, 1.0, 30, 10);
+		    glTranslatef(0.0, 0.0, 6.0);
+		    gluSphere(bodyPart, 1.0, 15, 15);
     }
 
     void DrawRightArm()
@@ -146,7 +147,8 @@ class TopHat
 	    //Forearm
 		    glRotatef(larmR, -50.0, 10.0, 0.0);
 		    gluCylinder(bodyPart, 1.0, 1.0, 6.0, 30, 30);
-		    gluDisk(bodyPart, 0.0, 1.0, 30, 10);
+		    glTranslatef(0.0, 0.0, 6.0);
+		    gluSphere(bodyPart, 1.0, 15, 15);
     }
 
     void DrawLeftLeg()
@@ -559,7 +561,7 @@ if(moveLegs > 0)
             glPushMatrix();
             glTranslatef(xOrig+1,yOrig+1,zOrig+1);
             glScalef(3,3,3);
-            drawChair();
+            //drawChair();
             glPopMatrix();
             glutPostRedisplay();
         }

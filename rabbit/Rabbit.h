@@ -43,6 +43,10 @@ class Rabbit
 	float yOrig;
 	float zOrig;
 	float rotation;
+	float degree;
+	float dx;
+	float dy;
+	float dz;
 
 	// Textures
 	int numTextures; // set in constructor (RABBIT_TEXTURE_NUM)
@@ -100,6 +104,9 @@ class Rabbit
 
 	void drawHead(){
 		// Color
+		glRotatef(degree,dx,0,0);
+        	glRotatef(degree,0,dy,0);
+        	glRotatef(degree,0,0,dz);
 		glMaterialfv(GL_FRONT, LIGHTING_TYPE, WHITE);
 		// Textured Part
 		glEnable(GL_TEXTURE_2D);
@@ -233,6 +240,10 @@ class Rabbit
 		this->xOrig = xOrig;
 		this->yOrig = yOrig;
 		this->zOrig = zOrig;
+		this->degree=0;
+		this->dx=0;
+        	this->dy=0;
+        	this->dz=0;
 		this->rotation = rotation;
 		numTextures = RABBIT_TEXTURE_NUM;
 		animation = 0;
@@ -318,7 +329,37 @@ class Rabbit
 			xOrig -= 0.05; // back away from hat as it enlarges
 		} else if (frame == 1320) {
 			setAnimation(IDLE);
-		}
+		}else if(frame<1380){
+            		//nothing
+       		}
+       		 //wants carrot
+        	else if(frame<1470){
+            	//beckons hat to make carrot
+            		leftPoint+=1;
+        	}
+        	else if(frame<1740){
+            		//nothing may want to hop in anger before this
+        	}
+       		 //hops in anger
+        	else if(frame==1740){
+            	setAnimation(JUMPING); //doesnt work with rotating head
+        	}
+        	//shakes head for 80 frames multiple of four is good
+        	else if(frame<1760){
+            		degree-=.7;
+            		dy=1;
+        	}
+        	else if(frame<1800){
+            	degree+=.7;
+        	}
+        	else if(frame<1820){
+            	degree-=.7;
+        	}
+        	else if(frame==1820){
+            	degree=0;
+            	dy=0;
+            	setAnimation(IDLE);
+        	}
 		
 		if (animation == RIGHT_POINT){
 			rightPoint += 1.0;
@@ -334,25 +375,7 @@ class Rabbit
 				squish = SQUISH_DEF;
 			}
 		}
-        else if(frame<1380){
-            //nothing
-        }
-        //wants carrot
-        else if(frame<1470){
-            //beckons hat to make carrot
-            leftPoint+=1;
-        }
-        else if(frame<1740){
-            //nothing may want to hop in anger before this
-        }
-        //hops in anger
-        else if(frame=1740){
-            setAnimation(JUMPING);
-        }
-        //shakes head for 80 frames multiple of four is good
-        else if(frame<1820){
-            
-        }
+       
 	}
 
 	void draw(){
