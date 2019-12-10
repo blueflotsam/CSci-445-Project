@@ -241,6 +241,9 @@ class Rabbit
 		this->yOrig = yOrig;
 		this->zOrig = zOrig;
 		this->degree=0;
+		this->dx=0;
+        	this->dy=0;
+        	this->dz=0;
 		this->rotation = rotation;
 		numTextures = RABBIT_TEXTURE_NUM;
 		animation = 0;
