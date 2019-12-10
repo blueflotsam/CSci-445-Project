@@ -337,12 +337,15 @@ class Rabbit
             	//beckons hat to make carrot
             		leftPoint+=1;
         	}
-        	else if(frame<1740){
-            		//nothing may want to hop in anger before this
+        	else if(frame<1650){
+            		//nothing 
         	}
+            else if(frame<1740){
+                leftPoint-=1;
+            }
        		 //hops in anger
         	else if(frame==1740){
-            	setAnimation(JUMPING); //doesnt work with rotating head
+            	//setAnimation(JUMPING);
         	}
         	//shakes head for 80 frames multiple of four is good
         	else if(frame<1760){
@@ -360,6 +363,45 @@ class Rabbit
             	dy=0;
             	setAnimation(IDLE);
         	}
+            else if(frame<2090){
+                //do nothing
+            }
+            else if(frame==2090){
+                setAnimation(JUMPING);
+            }
+            else if(frame<2110){
+                degree-=.7;
+                dy=1;
+            }
+            else if(frame<2150){
+                degree+=.7;
+            }
+            else if(frame<2170){
+                degree-=.7;
+            }
+            else if(frame==2170){
+                setAnimation(IDLE);
+            }
+            else if(frame<2700){
+                //do nothing
+            }
+            else if(frame==2700){
+                setAnimation(JUMPING);
+            }
+            else if(frame<2730){
+                xOrig+=.07;
+            }
+            else if(frame<2790){
+                rightPoint+=1;
+            }
+            else if(frame==2790){
+                setAnimation(IDLE);
+            }
+            else if(frame<2880){
+                rightPoint+=n;
+                if(frame%10==0)
+                    n*=-1;
+            }
 		
 		if (animation == RIGHT_POINT){
 			rightPoint += 1.0;
