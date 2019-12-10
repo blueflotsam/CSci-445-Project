@@ -8,9 +8,8 @@
 
 #include "../Harezini.h"
 
-#define RABBIT_TEXTURE "./rabbit/rabbit_texture.jpg"
-#define RABBIT_FACE "./rabbit/rabbit_face.jpg"
-#define RABBIT_EAR "./rabbit/rabbit_ear.jpg"
+#define RABBIT_TEXTURE "./rabbit/rabbit_texture.ppm"
+#define RABBIT_FACE "./rabbit/rabbit_face.ppm"
 #define RABBIT_TEXTURE_NUM 2
 
 class Rabbit

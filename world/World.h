@@ -9,9 +9,9 @@
 #include "../Harezini.h"
 
 
-#define ROAD_FILE 	"./world/road_texture.jpg"
-#define GRASS_FILE 	"./world/grass_texture.jpg"
-#define SKY_FILE		"./world/sky_texture.jpg"
+#define ROAD_FILE 	"./world/road_texture.ppm"
+#define GRASS_FILE 	"./world/grass_texture.ppm"
+#define SKY_FILE		"./world/sky_texture.ppm"
 #define WORLD_TEXTURE_NUM 3
 
 class World
