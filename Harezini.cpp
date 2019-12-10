@@ -80,14 +80,34 @@ void initialize()
 	glDepthFunc(GL_LEQUAL);
 	glCullFace(GL_BACK);
 	// Light
-	GLfloat lightamb[]={1.0,1.0,1.0,1.0};
-	GLfloat lightdif[]={0.5,0.5,0.5,1.0};
-	GLfloat lightpos[]={100,100,100,1};
+	GLfloat lightpos[]={999,999,999,1};
+	#if RAYGL == 1
+		GLfloat lightamb[]={0.6,0.6,0.6,1.0};
+		GLfloat lightdif[]={1.0,1.0,1.0,1.0};
+	#else
+		GLfloat lightamb[]={1.0,1.0,1.0,1.0};
+		GLfloat lightdif[]={0.7,0.7,0.7,1.0};
+	#endif
+	
+	glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SINGLE_COLOR);
+	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_FALSE);
+
+	// Ambient
+	glColorMaterial(GL_FRONT, GL_AMBIENT);
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lightamb);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, lightamb);
+
+	// Diffuse
+	glColorMaterial(GL_FRONT, GL_DIFFUSE);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightdif);
+
+	// position
 	glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
+
+	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
+	glEnable(GL_NORMALIZE);
 	glShadeModel(GL_SMOOTH);
 }
 
