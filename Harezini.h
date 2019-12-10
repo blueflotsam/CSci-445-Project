@@ -29,6 +29,8 @@
 #ifndef COLOR
 	#define COLOR
 	const float BLACK[]	= {0.0, 0.0, 0.0, 1.0};
+	const float BROWN[] = {0.349, 0.1922, 0.0941, 1.0};
+    	const float LEAFGREEN[] = {0.2275, 0.3725, 0.0431, 1.0};
 	const float WHITE[]	= {1.0, 1.0, 1.0, 1.0};
 	const float GRAY[]	= {0.5, 0.5, 0.5, 1.0};
 	const float RED[]	= {1.0, 0.5, 0.5, 1.0};
