@@ -284,34 +284,34 @@ class Rabbit
 			rotation += -2;
 		} else if (frame < 900) {
 			// Do nothing
-		} else if (frame < 990) {
-			// 1.5 spins
-		} else if (frame == 990) {
-			cycleFancy();
 		} else if (frame < 1020) {
-			// .5 spin
-		} else if (frame < 1050) {
+
+            if (frame == 960) {
+			    cycleFancy();
+            }
+            rotation+=3;
+		} else if (frame < 1080) {
 			// Do nothing
-		} else if (frame == 1050) {
+		} else if (frame == 1080) {
 			setAnimation(JUMPING);
 			xOrig += 0.1;
-		} else if (frame < 1150) {
+		} else if (frame < 1180) {
 			xOrig += 0.1;
-		} else if (frame == 1150) {
+		} else if (frame == 1180) {
 			setAnimation(IDLE);
 			rightPoint += 2;
-		} else if (frame < 1175) {
+		} else if (frame < 1205) {
 			rightPoint += 2;
-		} else if (frame < 1200) {
+		} else if (frame < 1230) {
 			rightPoint -= 2;
-		} else if (frame < 1215) {
+		} else if (frame < 1245) {
 			// Wait half second
-		} else if (frame == 1215) {
+		} else if (frame == 1245) {
 			setAnimation(JUMPING);
 			xOrig -= 0.05;
-		} else if (frame < 1260) {
+		} else if (frame < 1290) {
 			xOrig -= 0.05; // back away from hat as it enlarges
-		} else if (frame == 1260) {
+		} else if (frame == 1290) {
 			setAnimation(IDLE);
 		}
 		
@@ -329,6 +329,13 @@ class Rabbit
 				squish = SQUISH_DEF;
 			}
 		}
+        else if(frame<1320){
+            //nothing
+        }
+        //wants carrot
+        else if(frame<1410){
+            
+        }
 	}
 
 	void draw(){
