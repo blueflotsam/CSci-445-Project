@@ -235,10 +235,10 @@ class World
         float trunkRadius=1;
         float trunkHeight=tHeight;
         float trunkSharpness=14;
-        glMaterialfv(GL_FRONT, LIGHTING_TYPE, BLACK);
+        glMaterialfv(GL_FRONT, LIGHTING_TYPE, BROWN);
         glRotatef(90,-90,0,0);
         gluCylinder(trunk,trunkRadius,trunkRadius,trunkHeight,trunkSharpness,trunkSharpness);
-        glMaterialfv(GL_FRONT, LIGHTING_TYPE, GREEN);
+        glMaterialfv(GL_FRONT, LIGHTING_TYPE, LEAFGREEN);
         glTranslatef(0,0,trunkHeight);
         gluSphere(leaves,leavesRadius,leavesSharpness,leavesSharpness);        
     }
@@ -303,12 +303,14 @@ class World
         std::ifstream file;
         file.open("treeSpacing.txt");
         float x,y,z,h;
+	glDisable(GL_TEXTURE_2D);
         while(file>>x>>y>>z>>h){
             glPushMatrix();
             glTranslatef(-252,0,0);
             drawTree(x,y,z,h);
             glPopMatrix();
         }
+	glEnable(GL_TEXTURE_2D);
 
 	}
 };
