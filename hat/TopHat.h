@@ -561,7 +561,7 @@ if(moveLegs > 0)
             glPushMatrix();
             glTranslatef(xOrig+1,yOrig+1,zOrig+1);
             glScalef(3,3,3);
-            drawChair();
+            //drawChair();
             glPopMatrix();
             glutPostRedisplay();
         }
