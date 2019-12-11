@@ -23,7 +23,7 @@ class Carrot
     float zrot;
     float angle;
     //Other global variables
-    double rate;
+    float rate;
 	float d[3];
     float size;
 	float times;//what time in the animation the object is in, incriments by one for each movement
@@ -146,9 +146,6 @@ class Carrot
 		loadTextures();
 	}
 
-/*void animate(bool stage){
-animate=stage;
-}*/
 
 	void drawCarrot (void){
 		//TEXTURE_MODEL(); Don't reload the images every time the carrot is drawn
@@ -203,8 +200,8 @@ animate=stage;
 
 		//animation part
 		if(animate){
-			if(upwards) times+=.01;
-			else times-=.01;
+			if(upwards) times+=5;
+			else times-=5;
 			if(times>=100) upwards=false;
 			else if(times<=0) upwards=true;
 			glutPostRedisplay();
@@ -227,14 +224,39 @@ animate=stage;
         }
         else if(frame==2880){
             zrot-=90;
-            carrotPosition(23,35,-65);
+            carrotPosition(23,35,-60);
             
         }
         else if(frame<2940){
             ypos-=.68;
         }
         else if(frame<2950){
-            zrot-=9.01;
+            zrot+=9.01;
         }
+        else if(frame<3140){
+            //do nothing
+        }
+        else if(frame<3260){
+            size+=.009;
+            ypos+=.01;
+        }
+        else if(frame<3370){
+            //do nothing
+        }
+        else if(frame<3400){
+            size-=.011;
+            zrot-=.01;
+            ypos-=.015;
+        }
+        else if(frame<3540){
+            //do nothing
+        }
+        else if(frame==3540){
+            carrotAnimation(1);
+        }
+        else if(frame<4200){
+            xpos+=.25;
+        }
+        
 	}
 };
