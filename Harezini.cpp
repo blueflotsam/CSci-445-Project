@@ -15,11 +15,15 @@
 #include "./rabbit/Rabbit.h"
 #include "./carrot/Carrot.h"
 #include "./hat/TopHat.h"
+#include "./teapot/Teapot.h"
+#include "./chair/Chair.h"
 
 World  *world;
 Rabbit *rabbit;
 Carrot *carrot;
 TopHat *tophat;
+Teapot *teapot;
+Chair  *chair;
 
 #define LIGHTING_TYPE GL_AMBIENT_AND_DIFFUSE
 #define YSCALE_DEF 1.0
@@ -61,6 +65,8 @@ int main(int argc, char **argv)
 	rabbit = new Rabbit(3.0, -2.0, 100.0, 180);
 	carrot = new Carrot(-5.0,-20.0,-93.0);
 	tophat = new TopHat(22, -4, -60);
+	teapot = new Teapot(00.0, 1.0, 10.0);
+	chair = new Chair(10.0, 1.0, 10.0);
 	// Main loop
 	glutMainLoop();
 	// Cleanup
@@ -160,6 +166,14 @@ void myDisplay()
 		glPushMatrix();
 			carrot->drawCarrot();
 		glPopMatrix();
+		//Chair
+		glPushMatrix();
+		    chair->draw();
+		glPopMatrix();
+		//Teapot
+		glPushMatrix();
+			teapot->draw();
+		glPopMatrix();
 	glPopMatrix();
 
 	#if RAYGL == 1
@@ -217,6 +231,8 @@ void idleFunction()
 	rabbit->idle(frame);
 	tophat->idle(frame);
 	carrot->idle(frame);
+	teapot->idle(frame);
+	 chair->idle(frame);
 
 	// Pan around landscape, 16.67 seconds
 	if (frame < 500){
