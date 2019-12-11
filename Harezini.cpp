@@ -65,8 +65,8 @@ int main(int argc, char **argv)
 	rabbit = new Rabbit(3.0, -2.2, 100.0, 180);
 	carrot = new Carrot(-5.0,-20.0,-93.0);
 	tophat = new TopHat(22, -4, -60);
-	teapot = new Teapot(00.0, 1.0, 10.0);
-	chair = new Chair(10.0, 1.0, 10.0);
+	teapot = new Teapot(00.0, -10.0, 10.0);
+	chair = new Chair(10.0, -10.0, 10.0);
 	// Main loop
 	glutMainLoop();
 	// Cleanup
@@ -311,7 +311,7 @@ void idleFunction()
 	}
 	
 	glutPostRedisplay();
-	if(frame==6000){
+	if(frame==5600){
 		exit(0);
 	}
 	frame++;
