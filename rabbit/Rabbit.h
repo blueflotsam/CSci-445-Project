@@ -17,14 +17,14 @@ class Rabbit
 	private:
 
 	// Animation Defaults
-	static constexpr float RIGHT_POINT_DEF = 0.0;
-	static constexpr float LEFT_POINT_DEF = 0.0;
-	static constexpr float LEG_BEND_DEF = 30.0;
-	static constexpr float SQUISH_DEF = 1.0;
-	static constexpr float RIGHT_SWING_DEF = 25.0;
-	static constexpr float LEFT_SWING_DEF = 25.0;
-	static constexpr float RIGHT_FLEX_DEF = 15.0;
-	static constexpr float LEFT_FLEX_DEF = 15.0;
+	static const float RIGHT_POINT_DEF = 0.0;
+	static const float LEFT_POINT_DEF = 0.0;
+	static const float LEG_BEND_DEF = 30.0;
+	static const float SQUISH_DEF = 1.0;
+	static const float RIGHT_SWING_DEF = 25.0;
+	static const float LEFT_SWING_DEF = 25.0;
+	static const float RIGHT_FLEX_DEF = 15.0;
+	static const float LEFT_FLEX_DEF = 15.0;
 
 	// Animation Values
 	int animation;
