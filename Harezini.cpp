@@ -278,10 +278,17 @@ void idleFunction()
 	else if(frame<2790){
 		moveCamBackward(.2);
 	}
+	else if(frame<3560){
+		//do nothing
+	}
+	else if(frame<3650){
+		rotateCam(0,.5);
+	}
 	
 	glutPostRedisplay();
 	frame++;
 }
+
 
 /*
 		REMOVE LATER
