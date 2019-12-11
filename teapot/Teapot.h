@@ -1,7 +1,8 @@
 /**************************************************/
-/* Name: David Andrew Wilson IV                   */
+/* Name: Megan Giesler	                          */
 /*                                                */
-/* Draws the environment                          */
+/* Draws a teapot and has the code for the	  */
+/* movie					  */
 /*                                                */
 /* CSci 446 / fall 2019                           */
 /**************************************************/
