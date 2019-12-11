@@ -300,8 +300,20 @@ void idleFunction()
 	else if(frame<3650){
 		rotateCam(0,.5);
 	}
+	else if (frame<4600){
+		//d0 nothing
+	}
+	else if (frame==4600){
+		carrot->xpos=xPos+5;
+		carrot->zpos=zPos+5;
+		rabbit->xOrig=xPos+5;
+		rabbit->zOrig=zPos+5;
+	}
 	
 	glutPostRedisplay();
+	if(frame==6000){
+		exit(0);
+	}
 	frame++;
 }
 
