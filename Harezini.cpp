@@ -62,7 +62,7 @@ int main(int argc, char **argv)
 	initialize();
 	// initialize class objects
 	world = new World(0.0, -5.5, 0.0);
-	rabbit = new Rabbit(3.0, -2.0, 100.0, 180);
+	rabbit = new Rabbit(3.0, -2.2, 100.0, 180);
 	carrot = new Carrot(-5.0,-20.0,-93.0);
 	tophat = new TopHat(22, -4, -60);
 	teapot = new Teapot(00.0, 1.0, 10.0);
@@ -88,7 +88,7 @@ void initialize()
 	// Light
 	GLfloat lightpos[]={100,999,100,1};
 	#if RAYGL == 1
-		GLfloat lightamb[]={1.0,1.0,1.0,1.0};
+		GLfloat lightamb[]={0.8,0.8,0.8,1.0};
 		GLfloat lightdif[]={1.0,1.0,1.0,1.0};
 	#else
 		GLfloat lightamb[]={1.0,1.0,1.0,1.0};

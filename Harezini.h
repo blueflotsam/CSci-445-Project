@@ -30,16 +30,18 @@
 	#define COLOR
 	const float BLACK[]	= {0.0, 0.0, 0.0, 1.0};
 	const float BROWN[] = {0.349, 0.1922, 0.0941, 1.0};
-    	const float LEAFGREEN[] = {0.2275, 0.3725, 0.0431, 1.0};
-	const float WHITE[]	= {1.0, 1.0, 1.0, 1.0};
+	const float LEAFGREEN[] = {0.3275, 0.5725, 0.4431, 1.0};
+	const float WHITE[]	= {0.7, 0.7, 0.7, 1.0};
+	const float WHITE_AMB[] = {0.5, 0.5, 0.5, 1.0};
 	const float GRAY[]	= {0.5, 0.5, 0.5, 1.0};
 	const float RED[]	= {1.0, 0.5, 0.5, 1.0};
 	const float GREEN[]	= {0.0, 1.0, 0.0, 1.0};
 	const float BLUE[]	= {0.25, 0.5, 1.0, 1.0};
+	const float PURE_WHITE[] = {1.0, 1.0, 1.0, 1.0};
 #endif
 
 // RAYGL
-#define RAYGL 0
+#define RAYGL 1
 #if RAYGL == 1
 	#include "./raygl/raygl.h"
 	#include "./raygl/raygldefs.h"

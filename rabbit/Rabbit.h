@@ -106,11 +106,19 @@ class Rabbit
 	void drawHead(){
 		// Color
 		glRotatef(degree,dx,0,0);
-        	glRotatef(degree,0,dy,0);
-        	glRotatef(degree,0,0,dz);
-		glMaterialfv(GL_FRONT, LIGHTING_TYPE, WHITE);
+		glRotatef(degree,0,dy,0);
+		glRotatef(degree,0,0,dz);
+		glMaterialfv(GL_FRONT, GL_AMBIENT, PURE_WHITE);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, PURE_WHITE);
+		glColor3f(1.0f, 1.0f, 1.0f);
 		// Textured Part
 		glEnable(GL_TEXTURE_2D);
+		#if RAYGL == 1
+			rayglScaleTexture(2, 1.2, 1);
+			rayglTranslateTexture(0.5, 0, 0);
+			rayglRotateTexture(0, 0, 0);
+			rayglTextureType(0);
+		#endif
 		glBegin(GL_QUADS);
 			// Head Front
 			glNormal3f( 0.0, 0.0, 1.0);
@@ -124,10 +132,12 @@ class Rabbit
 			glVertex3f(-0.8, 0.0, 0.5); // FL
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
+		glMaterialfv(GL_FRONT, GL_AMBIENT, WHITE_AMB);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, WHITE);
 		// Non-textured
 		glBegin(GL_QUADS);
 			// Head Back
-		      glNormal3f( 0.0,0.0,-1.0);
+		    glNormal3f( 0.0,0.0,-1.0);
 			glVertex3f( 0.8, 0.0,-1.0); // BR
 			glVertex3f(-0.8, 0.0,-1.0); // BL
 			glVertex3f(-0.8, 1.4,-1.0); // TL
@@ -139,37 +149,37 @@ class Rabbit
 			glVertex3f( 0.8, 1.4,-0.4); // FR
 			glVertex3f( 0.8, 1.4,-1.0); // BR
 			// Head Front Diagonal
-		      glNormal3f( 0.0,1.0, 1.0);
+		    glNormal3f( 0.0,  0.0, 1.0);
 			glVertex3f( 0.8, 0.6, 0.5); // FR
 			glVertex3f( 0.8, 1.4,-0.4); // BR
 			glVertex3f(-0.8, 1.4,-0.4); // BL
 			glVertex3f(-0.8, 0.6, 0.5); // FL
 			// Head Side Left Back
-		      glNormal3f(-1.0,0.0,0.0);
+			glNormal3f(-1.0,0.0,0.0);
 			glVertex3f(-0.8, 1.4,-0.4); // TR
 			glVertex3f(-0.8, 1.4,-1.0); // TL
 			glVertex3f(-0.8, 0.0,-1.0); // BL
 			glVertex3f(-0.8, 0.0,-0.4); // BR
 			// Head Side Left Front
-		      glNormal3f(-1.0,0.0,0.0);
+			glNormal3f(-1.0,0.0,0.0);
 			glVertex3f(-0.8, 1.4,-0.4); // TL
 			glVertex3f(-0.8, 0.0,-0.4); // BL
 			glVertex3f(-0.8, 0.0, 0.5); // BR
 			glVertex3f(-0.8, 0.6, 0.5); // TR
 			// Head Side Right Back
-		      glNormal3f( 1.0,0.0,0.0);
+			glNormal3f( 1.0,0.0,0.0);
 			glVertex3f( 0.8, 1.4,-0.4); // TR
 			glVertex3f( 0.8, 0.0,-0.4); // BR
 			glVertex3f( 0.8, 0.0,-1.0); // BL
 			glVertex3f( 0.8, 1.4,-1.0); // TL
 			// Head Side Right Front
-		      glNormal3f( 1.0,0.0,0.0);
+			glNormal3f( 1.0,0.0,0.0);
 			glVertex3f( 0.8, 1.4,-0.4); // TL
 			glVertex3f( 0.8, 0.6, 0.5); // TR
 			glVertex3f( 0.8, 0.0, 0.5); // BR
 			glVertex3f( 0.8, 0.0,-0.4); // BL
 			// Head Base
-		      glNormal3f(0.0,-1.0,0.0);
+			glNormal3f(0.0,-1.0,0.0);
 			glVertex3f( 0.8, 0.0, 0.5); // FR
 			glVertex3f(-0.8, 0.0, 0.5); // FL
 			glVertex3f(-0.8, 0.0,-1.0); // BL
@@ -188,7 +198,7 @@ class Rabbit
 
 		glBegin(GL_QUADS);
 			// Color
-			glMaterialfv(GL_FRONT, GL_AMBIENT, color);
+			glMaterialfv(GL_FRONT, GL_AMBIENT, (color == WHITE ? WHITE_AMB : color));
 			glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
 			glColor3fv(color);
 			// Top
@@ -502,17 +512,11 @@ void idle(int frame){
 	}
 
 	void draw(){
-		GLfloat shine[] = {4};
-		glMaterialfv(GL_FRONT, GL_SHININESS, shine);
+		GLfloat shine[] = {0};
+		//glMaterialfv(GL_FRONT, GL_SHININESS, shine);
 		// Setup texture
 		glBindTexture(GL_TEXTURE_2D, texture[FACE]);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-		#if RAYGL == 1
-			rayglScaleTexture(1, 1, 1);
-			rayglTranslateTexture(0, 0, 0);
-			rayglRotateTexture(0, 0, 0);
-			rayglTextureType(0);
-		#endif
 		glDisable(GL_TEXTURE_2D);
 		// Global Matrix
 		glTranslatef(xOrig, yOrig, zOrig);
@@ -520,16 +524,20 @@ void idle(int frame){
 		// Draw Head
 		glPushMatrix();
 			glTranslatef(0.0,1.0,0.2);
+			glMaterialfv(GL_FRONT, GL_AMBIENT, PURE_WHITE);
+			glMaterialfv(GL_FRONT, GL_DIFFUSE, PURE_WHITE);
 			drawHead();
 			// Eyes
 			for(float side = 1.0; side >= -1.0; side -= 2.0){ 
 				glPushMatrix();
 					glTranslatef(side*0.4,0.9,0.2);
-					glMaterialfv(GL_FRONT, LIGHTING_TYPE, BLUE);
+					glMaterialfv(GL_FRONT, GL_AMBIENT, BLUE);
+					glMaterialfv(GL_FRONT, GL_DIFFUSE, BLUE);
 					glutSolidSphere(0.1,8,8);
 					glPushMatrix();
 						glTranslatef(0.0,-0.02,0.1);
-						glMaterialfv(GL_FRONT, LIGHTING_TYPE, BLACK);
+						glMaterialfv(GL_FRONT, GL_AMBIENT, BLACK);
+						glMaterialfv(GL_FRONT, GL_DIFFUSE, BLACK);
 						glutSolidSphere(0.05,8,8);
 					glPopMatrix();
 				glPopMatrix();
@@ -537,10 +545,20 @@ void idle(int frame){
 			// Ears
 			for(float side = 1.0; side >= -1.0; side -= 2.0){
 				glPushMatrix();
+					glMaterialfv(GL_FRONT, GL_AMBIENT, WHITE_AMB);
+					glMaterialfv(GL_FRONT, GL_DIFFUSE, WHITE);
 					glTranslatef(side*0.5, 1.0, -0.7);
 					glRotatef(180.0-(side*20), 0.0, 0.0, 1.0);
+					glDisable(GL_TEXTURE_2D);
 					drawBoxDown(WHITE, 0.6, 0.7, 0.2);
-					glEnable(GL_TEXTURE_2D);
+					/*glEnable(GL_TEXTURE_2D);
+					#if RAYGL == 1
+						rayglScaleTexture(2, 1.2, 1);
+						rayglTranslateTexture(0.5, 0, 0);
+						rayglRotateTexture(0.5, 0.5, 0);
+						rayglTextureType(0);
+					#endif
+					glColor3f(0.8f, 0.8f, 0.8f);
 					glBegin(GL_QUADS);
 						glNormal3f( 0.0,0.0,-1.0);
 						glTexCoord2f(0.0, 0.5);
@@ -551,10 +569,18 @@ void idle(int frame){
 						glVertex3f( 0.25,-0.7, 0.11);
 						glTexCoord2f(0.5, 0.5);
 						glVertex3f( 0.25, 0.0, 0.11);
-					glEnd();
+					glEnd();*/
 					glTranslatef(0.0,-0.7, 0.0);
+					glDisable(GL_TEXTURE_2D);
 					drawBoxDown(WHITE, 0.6, 0.7, 0.2);
-					glMaterialfv(GL_FRONT, LIGHTING_TYPE, RED);
+					/*glEnable(GL_TEXTURE_2D);
+					#if RAYGL == 1
+						rayglScaleTexture(2, 1.2, 1);
+						rayglTranslateTexture(0.5, 0, 0);
+						rayglRotateTexture(0.5, 0.5, 0);
+						rayglTextureType(0);
+					#endif
+					glColor3f(0.8f, 0.8f, 0.8f);
 					glBegin(GL_QUADS);
 						glNormal3f( 0.0,0.0,-1.0);
 						glTexCoord2f(0.5, 0.5);
@@ -565,7 +591,7 @@ void idle(int frame){
 						glVertex3f( 0.25,-0.7, 0.11);
 						glTexCoord2f(1.0, 0.5);
 						glVertex3f( 0.25, 0.0, 0.11);
-					glEnd();
+					glEnd();*/
 					glDisable(GL_TEXTURE_2D);
 				glPopMatrix();
 			}
@@ -573,12 +599,12 @@ void idle(int frame){
 		// Draw Torso
 		glPushMatrix();
 			glTranslatef(0.0, 1.0, 0.0);
-			glMaterialfv(GL_FRONT, LIGHTING_TYPE, WHITE);
 			drawBoxDown(WHITE, 2.0, 2.0, 1.0);
 			// Bow Tie
 			if(fancy){
 				glTranslatef(0.0,-0.2,0.51);
-				glMaterialfv(GL_FRONT, LIGHTING_TYPE, BLACK);
+				glMaterialfv(GL_FRONT, GL_AMBIENT, BLACK);
+				glMaterialfv(GL_FRONT, GL_DIFFUSE, BLACK);
 				glBegin(GL_TRIANGLES);
 					glNormal3f( 0.0,0.0, 1.0);
 					glVertex3f( 0.0, 0.0, 0.0);
@@ -607,8 +633,12 @@ void idle(int frame){
 				if(fancy && facing == -1.0) { // Right arm
 					glTranslatef(0.0, -0.8, 0.25);
 					glRotatef(90.0, -1.0, 0.0, 0.0);
+					glMaterialfv(GL_FRONT, GL_AMBIENT, BLACK);
+					glMaterialfv(GL_FRONT, GL_DIFFUSE, BLACK);
 					drawBoxDown(BLACK, 0.2, 1.0, 0.2);
 					glTranslatef(0.0,-1.0,0.0);
+					glMaterialfv(GL_FRONT, GL_AMBIENT, WHITE);
+					glMaterialfv(GL_FRONT, GL_DIFFUSE, WHITE);
 					drawBoxDown(WHITE, 0.2, 0.2, 0.2);
 				}
 			glPopMatrix();
@@ -644,7 +674,7 @@ void idle(int frame){
 				glTranslatef(0.0,-0.5,-0.3);
 				glRotatef(-legBend, 1.0f, 0.0f, 0.0f);
 				glRotatef(90.0f,-1.0f, 0.0f, 0.0f);
-				drawBoxDown(GRAY, 0.81, 1.5, 0.6);
+				drawBoxDown(WHITE, 0.81, 1.5, 0.6);
 			glPopMatrix();
 		}
 	}

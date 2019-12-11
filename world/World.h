@@ -136,7 +136,7 @@ class World
 		// Texture Change
 		#if RAYGL == 1
 			rayglScaleTexture(xSize, xSize, 1);
-			rayglTranslateTexture(0, 0, 0);
+			rayglTranslateTexture(0.5, 0, 0);
 			rayglRotateTexture(0, 0, 0);
 			rayglTextureType(0);
 		#endif
