@@ -25,6 +25,7 @@ class Carrot
     //Other global variables
     double rate;
 	float d[3];
+    float size;
 	float times;//what time in the animation the object is in, incriments by one for each movement
 	float ambientStrength;
 	bool animate;
@@ -140,6 +141,7 @@ class Carrot
     	zrot=0;
     	angle=0;
     	rate=2.5;
+        size=.2;
     	numTextures = 1;
 		loadTextures();
 	}
@@ -150,9 +152,11 @@ animate=stage;
 
 	void drawCarrot (void){
 		//TEXTURE_MODEL(); Don't reload the images every time the carrot is drawn
-        glScalef(.5,.5,.5);
 		glTranslatef(xpos,ypos,zpos);
-        glRotatef(angle,xrot,yrot,zrot);
+        glScalef(size,size,size);
+        glRotatef(xrot,1,0,0);
+        glRotatef(yrot,0,1,0);    
+        glRotatef(zrot,0,0,1);
 		glTranslatef(.01*times,0,0);
 		glTranslatef(-.8,0,0);
 		glDisable(GL_TEXTURE_2D);
@@ -211,14 +215,6 @@ animate=stage;
     void carrotPosition(float x,float y,float z){
         xpos=x;ypos=y;zpos=z;
     }
-    
-    void carrotRotation(float a,float x, float y, float z){
-        angle=a;xrot=x;yrot=y;zrot=z;
-    }
-
-    void carrotRotation(float x, float y, float z){
-        xrot=x;yrot=y;zrot=z;
-    }
 
     void carrotAnimation(double input){
     animate=input;
@@ -226,9 +222,19 @@ animate=stage;
     }
 
 	void idle (int frame){
-		//frame by frame animation goes here
-        //carrotAnimation(times+=rate);
-        //if(times>100||times<0)
-            //rate*=-1;
+        if(frame<2880){
+            //do nothing
+        }
+        else if(frame==2880){
+            zrot-=90;
+            carrotPosition(23,35,-65);
+            
+        }
+        else if(frame<2940){
+            ypos-=.68;
+        }
+        else if(frame<2950){
+            zrot-=9.01;
+        }
 	}
 };
