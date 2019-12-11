@@ -40,9 +40,6 @@ class Rabbit
 	float n;
 
 	// Position Values
-	float xOrig;
-	float yOrig;
-	float zOrig;
 	float rotation;
 	float degree;
 	float dx;
@@ -248,6 +245,9 @@ class Rabbit
 	static const int LEFT_POINT = 2;
 	static const int JUMPING = 3;
 	static const int TOTAL_ANIMATIONS = 4;
+		float xOrig;
+	float yOrig;
+	float zOrig;
 
 	// Constructor
 	Rabbit(float xOrig, float yOrig, float zOrig, float rotation){
@@ -489,8 +489,23 @@ void idle(int frame){
             else if(frame==3560){
                 setAnimation(JUMPING);
             }
-            else if(frame<4200){
+            else if(frame<4000){
                 xOrig+=.25;
+            }
+            else if(frame==4000){
+                xOrig-=75;
+                zOrig+=45;
+                rotation+=60;
+            }
+            else if(frame<4600){
+                zOrig-=.25;
+            }
+            else if(frame==4600){
+                rotation+=30;
+            }
+            else if(frame<6000){
+                xOrig+=.25;
+                zOrig-=.25;
             }
           
 		
