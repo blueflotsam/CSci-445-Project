@@ -204,7 +204,6 @@ class Carrot
 			else times-=5;
 			if(times>=100) upwards=false;
 			else if(times<=0) upwards=true;
-			glutPostRedisplay();
 		}
 		glDisable(GL_COLOR_MATERIAL);
 	}
@@ -215,7 +214,6 @@ class Carrot
 
     void carrotAnimation(double input){
     animate=input;
-    drawCarrot();
     }
 
 	void idle (int frame){
