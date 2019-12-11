@@ -290,7 +290,7 @@ class Rabbit
 		squish = SQUISH_DEF;
 	}
 
-		void idle(int frame){
+void idle(int frame){
 		if (frame == 1){
 			setAnimation(JUMPING);
 			zOrig -= 0.2;
@@ -386,6 +386,7 @@ class Rabbit
             }
             else if(frame==2170){
                 setAnimation(IDLE);
+                dy=0;
             }
             else if(frame<2700){
                 //do nothing
@@ -407,6 +408,81 @@ class Rabbit
                 if(frame%10==0)
                     n*=-1;
             }
+            else if(frame<3020){
+                //do nothing
+            }
+            else if(frame==3020){
+                setAnimation(JUMPING);
+            }
+            else if(frame<3080){
+                xOrig+=.1;
+            }
+            else if(frame==3080){
+                setAnimation(IDLE);
+            }
+            else if(frame<3140){
+                rightPoint+=.7;
+            }
+            else if(frame==3140){
+                setAnimation(JUMPING);
+            }
+            else if(frame<3260){
+                xOrig-=.07;
+                rightPoint-=.2;
+            }
+            else if(frame==3260){
+                setAnimation(IDLE);
+                dy=1;
+            }
+            else if(frame<3280){
+                degree-=.7;
+            }
+            else if(frame<3320){
+                degree+=.7;
+            }
+            else if(frame<3340){
+                degree-=.7;
+            }
+            else if(frame==3340){
+                dy=0;
+            }
+            else if(frame<3370){
+                rightPoint+=1;
+            }
+            else if(frame<3400){
+                //do nothing
+            }
+            else if(frame<3430){
+                rightPoint-=1;
+            }
+            else if(frame<3440){
+                //do nothing
+            }
+            else if(frame==3440){
+                dx=1;
+            }
+            else if(frame<3460){
+                degree+=.7;
+            }
+            else if(frame<3500){
+                degree-=.7;
+            }
+            else if(frame<3531){
+                degree+=.7;
+            }
+            else if(frame==3531){
+                dx=0;
+            }
+            else if(frame<3560){
+                //do Nothing
+            }
+            else if(frame==3560){
+                setAnimation(JUMPING);
+            }
+            else if(frame<4200){
+                xOrig+=.25;
+            }
+          
 		
 		if (animation == RIGHT_POINT){
 			rightPoint += 1.0;
