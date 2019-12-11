@@ -1,7 +1,8 @@
 /**************************************************/
-/* Name: David Andrew Wilson IV                   */
+/* Name: Megan Giesler	    	                  */
 /*                                                */
-/* Draws the environment                          */
+/* Draws the tophat and has animation for the hat */
+/* Also has movement for the tophat for the movie */
 /*                                                */
 /* CSci 446 / fall 2019                           */
 /**************************************************/
