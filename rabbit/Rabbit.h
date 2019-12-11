@@ -184,9 +184,12 @@ class Rabbit
 	void drawBoxDown(const float color[], float xScale, float yScale, float zScale){
 		xScale /= 2;
 		zScale /= 2;
+
 		glBegin(GL_QUADS);
 			// Color
-			glMaterialfv(GL_FRONT, LIGHTING_TYPE, color);
+			glMaterialfv(GL_FRONT, GL_AMBIENT, color);
+			glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
+			glColor3fv(color);
 			// Top
 			glNormal3f( 0.0, 1.0, 0.0);
 			glVertex3f( xScale,    0.0, zScale); // FR
@@ -379,6 +382,8 @@ class Rabbit
 	}
 
 	void draw(){
+		GLfloat shine[] = {4};
+		glMaterialfv(GL_FRONT, GL_SHININESS, shine);
 		// Setup texture
 		glBindTexture(GL_TEXTURE_2D, texture[FACE]);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
@@ -448,6 +453,7 @@ class Rabbit
 		// Draw Torso
 		glPushMatrix();
 			glTranslatef(0.0, 1.0, 0.0);
+			glMaterialfv(GL_FRONT, LIGHTING_TYPE, WHITE);
 			drawBoxDown(WHITE, 2.0, 2.0, 1.0);
 			// Bow Tie
 			if(fancy){

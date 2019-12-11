@@ -133,120 +133,94 @@ class World
 	}
 
 	static void drawRoad(float xSize, float zSize){
+		// Texture Change
+		#if RAYGL == 1
+			rayglScaleTexture(xSize, xSize, 1);
+			rayglTranslateTexture(0, 0, 0);
+			rayglRotateTexture(0, 0, 0);
+			rayglTextureType(0);
+		#endif
+
 		xSize /= 2;
 		zSize /= 2;
-		glBegin(GL_QUADS);
-			glMaterialfv(GL_FRONT, LIGHTING_TYPE, BLACK);
-			glNormal3f(0.0,1.0,0.0);
-			glTexCoord2f(0.0, 0.0);
-			glVertex3f(-xSize, 0.0, zSize);
-			glTexCoord2f(1.0, 0.0);
-			glVertex3f( xSize, 0.0, zSize);
-			glTexCoord2f(1.0, zSize/xSize);
-			glVertex3f( xSize, 0.0,-zSize);
-			glTexCoord2f(0.0, zSize/xSize);
-			glVertex3f(-xSize, 0.0,-zSize);
-		glEnd();
+
+		// Rotates as if looking down, then draws it looking head on
+		glPushMatrix();
+			glRotatef(90, 1.0, 0.0, 0.0);
+			glBegin(GL_QUADS);
+				glMaterialfv(GL_FRONT, LIGHTING_TYPE, GREEN);
+				glNormal3f( 0.0, 0.0, 1.0);
+				glTexCoord2f(0.0, 0.0);
+				glVertex3f(-xSize, zSize, 0.0);
+				glTexCoord2f(1.0, 0.0);
+				glVertex3f( xSize, zSize, 0.0);
+				glTexCoord2f(1.0, zSize/xSize);
+				glVertex3f( xSize,-zSize, 0.0);
+				glTexCoord2f(0.0, zSize/xSize);
+				glVertex3f(-xSize,-zSize, 0.0);
+			glEnd();
+		glPopMatrix();
 	}
 	
 	static void drawGrass(float xSize, float zSize){
+		// Texture Change
+		#if RAYGL == 1
+			rayglScaleTexture(10, 10, 1);
+			rayglTranslateTexture(0, 0, 0);
+			rayglRotateTexture(0, 0, 0);
+			rayglTextureType(0);
+		#endif
+
 		xSize /= 2;
 		zSize /= 2;
-		glBegin(GL_QUADS);
-			glMaterialfv(GL_FRONT, LIGHTING_TYPE, GREEN);
-			glNormal3f(0.0,1.0,0.0);
-			glTexCoord2f(0.0, 0.0);
-			glVertex3f(-xSize, 0.0, zSize);
-			glTexCoord2f(xSize, 0.0);
-			glVertex3f( xSize, 0.0, zSize);
-			glTexCoord2f(xSize, zSize);
-			glVertex3f( xSize, 0.0,-zSize);
-			glTexCoord2f(0.0, zSize);
-			glVertex3f(-xSize, 0.0,-zSize);
-		glEnd();
+
+		// Rotates as if looking down, then draws it looking head on
+		glPushMatrix();
+			glRotatef(-90, 1.0, 0.0, 0.0);
+			glBegin(GL_QUADS);
+				glMaterialfv(GL_FRONT, LIGHTING_TYPE, GREEN);
+				glNormal3f( 0.0, 0.0, 1.0);
+				glTexCoord2f(0.0, zSize);
+				glVertex3f(-xSize, -zSize, 0.0);
+				glTexCoord2f(xSize, zSize);
+				glVertex3f( xSize, -zSize, 0.0);
+				glTexCoord2f(xSize, 0.0);
+				glVertex3f( xSize, zSize, 0.0);
+				glTexCoord2f(0.0, 0.0);
+				glVertex3f(-xSize, zSize, 0.0);
+			glEnd();
+		glPopMatrix();
 	}
 
 	static void drawSky(float xSize, float zSize){
+		// Texture Change
+		#if RAYGL == 1
+			rayglScaleTexture(xSize, zSize, 1);
+			rayglTranslateTexture(0, 0, 0);
+			rayglRotateTexture(0, 0, 0);
+			rayglTextureType(0);
+		#endif
+
 		xSize /= 2;
 		zSize /= 2;
 
-		// Texture Change
-		#if RAYGL == 1
-			rayglScaleTexture(1000, 1000, 1);
-			rayglTranslateTexture(0, 0, 0);
-			rayglRotateTexture(0, 0, 0);
-			rayglTextureType(0);
-		#endif
-		// Back
-		glBegin(GL_QUADS);
-			glMaterialfv(GL_FRONT, LIGHTING_TYPE, BLUE);
-			glNormal3f( 0.0, 0.0, 1.0);
-			glTexCoord2f(0.0, 1.0);
-			glVertex3f(-xSize,   0.0,-zSize);
-			glTexCoord2f(1.0, 1.0);
-			glVertex3f( xSize,   0.0,-zSize);
-			glTexCoord2f(1.0, 0.0);
-			glVertex3f( xSize, xSize + zSize,-zSize);
-			glTexCoord2f(0.0, 0.0);
-			glVertex3f(-xSize, xSize + zSize,-zSize);
-		glEnd();
-		// Texture Change
-		#if RAYGL == 1
-			rayglScaleTexture(1000, 1000, 1);
-			rayglTranslateTexture(0, 0, 0);
-			rayglRotateTexture(0, 0, 0);
-			rayglTextureType(0);
-		#endif
-		// Front
-		glBegin(GL_QUADS);
-			glNormal3f( 0.0, 0.0,-1.0);
-			glTexCoord2f(1.0, 1.0);
-			glVertex3f(-xSize,   0.0, zSize);
-			glTexCoord2f(1.0, 0.0);
-			glVertex3f(-xSize, xSize + zSize, zSize);
-			glTexCoord2f(0.0, 0.0);
-			glVertex3f( xSize, xSize + zSize, zSize);
-			glTexCoord2f(0.0, 1.0);
-			glVertex3f( xSize,   0.0, zSize);
-		glEnd();
-		// Texture Change
-		#if RAYGL == 1
-			rayglScaleTexture(1000, 1000, 1);
-			rayglTranslateTexture(0, 0, 0);
-			rayglRotateTexture(90, 90, 90);
-			rayglTextureType(0);
-		#endif
-		// Right
-		glBegin(GL_QUADS);
-			glNormal3f( 1.0, 0.0, 0.0);
-			glTexCoord2f(0.0, 1.0);
-			glVertex3f( xSize,   0.0,-zSize);
-			glTexCoord2f(1.0, 1.0);
-			glVertex3f( xSize,   0.0, zSize);
-			glTexCoord2f(1.0, 0.0);
-			glVertex3f( xSize, xSize + zSize, zSize);
-			glTexCoord2f(0.0, 0.0);
-			glVertex3f( xSize, xSize + zSize,-zSize);
-		glEnd();
-		// Texture Change
-		#if RAYGL == 1
-			rayglScaleTexture(1000, 1000, 1);
-			rayglTranslateTexture(0, 0, 0);
-			rayglRotateTexture(90, 90, 90);
-			rayglTextureType(0);
-		#endif
-		// Left
-		glBegin(GL_QUADS);
-			glNormal3f(-1.0, 0.0, 0.0);
-			glTexCoord2f(1.0, 1.0);
-			glVertex3f(-xSize,   0.0,-zSize);
-			glTexCoord2f(1.0, 0.0);
-			glVertex3f(-xSize, xSize + zSize,-zSize);
-			glTexCoord2f(0.0, 0.0);
-			glVertex3f(-xSize, xSize + zSize, zSize);
-			glTexCoord2f(0.0, 1.0);
-			glVertex3f(-xSize,   0.0, zSize);
-		glEnd();
+		glPushMatrix();
+			for (int i = 0; i < 4; i++) {
+				glBegin(GL_QUADS);
+					glMaterialfv(GL_FRONT, LIGHTING_TYPE, BLUE);
+					glNormal3f( 0.0, 0.0, 1.0);
+					glTexCoord2f(0.0, 1.0);
+					glVertex3f(-xSize,   0.0,-zSize);
+					glTexCoord2f(1.0, 1.0);
+					glVertex3f( xSize,   0.0,-zSize);
+					glTexCoord2f(1.0, 0.0);
+					glVertex3f( xSize, xSize + zSize,-zSize);
+					glTexCoord2f(0.0, 0.0);
+					glVertex3f(-xSize, xSize + zSize,-zSize);
+				glEnd();
+				glRotatef(90.0, 0.0, 1.0, 0.0);
+			}
+		glPopMatrix();
 	}
     
 
@@ -311,22 +285,10 @@ class World
 		// Road
 		glBindTexture(GL_TEXTURE_2D, texture[ROAD]);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-		#if RAYGL == 1
-			rayglScaleTexture(1, 1, 1);
-			rayglTranslateTexture(0, 0, 0);
-			rayglRotateTexture(0, 0, 0);
-			rayglTextureType(0);
-		#endif
 		drawRoad(10.0, 1000.0);
 		// Grass
 		glBindTexture(GL_TEXTURE_2D, texture[GRASS]);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-		#if RAYGL == 1
-			rayglScaleTexture(500, 500, 1);
-			rayglTranslateTexture(0, 0, 0);
-			rayglRotateTexture(0, 0, 0);
-			rayglTextureType(0);
-		#endif
 		glTranslatef(-252.5, 0.0, 0.0);
 		drawGrass(495.0, 1000.0);
 		glTranslatef( 505.0, 0.0, 0.0);
