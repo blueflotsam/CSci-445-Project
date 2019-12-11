@@ -536,7 +536,7 @@ if(moveLegs > 0)
         scaleZ=z;
     }
 
-    void idle(int frame)
+        void idle(int frame)
     {
         if(frame==1){
             x=90;
@@ -594,6 +594,16 @@ if(moveLegs > 0)
         }
         else if(frame<2880){
             y+=2;
+        }
+        else if(frame<2960){
+            //do nothing
+        }
+        else if(frame<3020){
+            zOrig-=1;
+            x+=7.5;
+            z+=6;
+            y+=12;
+            yOrig-=.26;            
         }
             
 	
