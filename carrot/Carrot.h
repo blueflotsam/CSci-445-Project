@@ -11,7 +11,7 @@
 
 class Carrot
 {
-	private:
+	public:
 
 	// Location
 	float xpos;
@@ -123,7 +123,6 @@ class Carrot
 		glEnd();
 	}
 
-	public:
 
 	// Constructor
 	Carrot(float xpos, float ypos, float zpos){
@@ -252,9 +251,32 @@ class Carrot
         else if(frame==3540){
             carrotAnimation(1);
         }
-        else if(frame<4200){
+        else if(frame<4000){
             xpos+=.25;
         }
+        else if(frame==4000){
+            xpos-=90;
+            zpos+=30;
+            yrot+=90;
+            //zrot-=90;
+        }
+        else if(frame<4600){
+            
+            zpos-=.25;
+        }
+        else if(frame==4600){
+            zrot-=90;
+            yrot-=40;
+            ypos+=8;
+        }
+        else if(frame<4630){
+            //do nothing
+        }
+        else if(frame<6000){
+            xpos+=.25;
+            zpos-=.25;
+        }
+        
         
 	}
 };
