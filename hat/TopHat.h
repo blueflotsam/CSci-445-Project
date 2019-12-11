@@ -6,7 +6,6 @@
 /*                                                */
 /* CSci 446 / fall 2019                           */
 /**************************************************/
-
 #include "../Harezini.h"
 
 #define FELT_FILE "./hat/felt.ppm"
