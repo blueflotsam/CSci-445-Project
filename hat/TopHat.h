@@ -358,26 +358,30 @@ if(moveLegs > 0)
         else if(frame<1485){
             //wait
         }
-        else if(frame==1485){
-            //draw chair in hat
-        }
-        else if(frame<1740){
-            animateArms();
+        else if(frame<1740){  ////////////////////////////////
+            animateRightArm();
             //add chair moving
         }
         else if(frame<1820){
             //nothing
         }
         else if(frame<2075){
-            animateArms();
+            animateLeftArm();
             //grab teapot
         }
         else if(frame<2170){
             //nothing
         }
-        else if(frame<2700){
-            animateArms();
-            //grabs teapots two times    
+        else if(frame<2425){
+            animateLeftArm();
+            //grabs teapot    
+        }
+        else if(frame == 2425){
+        	moveArms = 0;
+        }
+        else if(frame<2680){
+            animateRightArm();
+            //grabs teapot    
         }
         else if(frame<2730){
             //do nothing
@@ -401,9 +405,18 @@ if(moveLegs > 0)
             y+=12;
             yOrig-=.26;            
         }
+        else if(frame < 4200){
+        	//do nothing
+        }
+        else if (frame == 4200){  // stands back up
+        	zOrig = -80.0;
+            x = -90.0;
+            z = 270.0;
+            yOrig = 4.0;
+        }
             
 	
-		    
+		  
 
     }
 };
